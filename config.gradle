@@ -1,0 +1,68 @@
+ext.versions = [
+        code             : 9,
+        name             : '1.0.8',
+        minSdk           : 16,
+        targetSdk        : 24,
+        compileSdk       : 25,
+        buildTools       : '25.0.2',
+
+        // android
+        supportLibs      : '25.1.0',
+
+        // 3rd
+        firebase         : '10.0.1',
+        rx               : '1.2.1',
+        butterKnife      : '8.4.0',
+        glide            : '3.7.0',
+        jsoup            : '1.9.2',
+        eventBus         : '3.0.0',
+        materialRipple   : '1.0.2',
+        okHttp           : '3.4.1',
+        freshdownloadview: '1.0',
+        stetho           : '1.4.1',
+        flowlayoutmanager: '1.2.3.2',
+        dagger           : '2.8',
+        timber           : '4.5.1',
+        sqlBrite         : '1.1.1',
+        leakcanary       : '1.5',
+        storio           : '1.12.3'
+
+]
+
+ext.libraries = [
+
+        // android
+        supportAppCompat         : "com.android.support:appcompat-v7:$versions.supportLibs",
+        supportDesign            : "com.android.support:design:$versions.supportLibs",
+
+        // 3rd
+        firebaseMessaging        : "com.google.firebase:firebase-messaging:$versions.firebase",
+        firebaseCore             : "com.google.firebase:firebase-core:$versions.firebase",
+        firebaseCrash            : "com.google.firebase:firebase-crash:$versions.firebase",
+        firebaseAds              : "com.google.firebase:firebase-ads:$versions.firebase",
+
+        dagger                   : "com.google.dagger:dagger:$versions.dagger",
+        daggerCompiler           : "com.google.dagger:dagger-compiler:$versions.dagger",
+
+        rxJava                   : "io.reactivex:rxjava:$versions.rx",
+        rxAndroid                : "io.reactivex:rxandroid:$versions.rx",
+
+        okHttp                   : "com.squareup.okhttp3:okhttp:$versions.okHttp",
+        okHttpLoggingInterceptor : "com.squareup.okhttp3:logging-interceptor:$versions.okHttp",
+        glide                    : "com.github.bumptech.glide:glide:$versions.glide",
+
+        sqlBrite                 : "com.squareup.sqlbrite:sqlbrite:$versions.sqlBrite",
+        jsoup                    : "org.jsoup:jsoup:$versions.jsoup",
+        butterKnife              : "com.jakewharton:butterknife:$versions.butterKnife",
+        butterKnifeCompiler      : "com.jakewharton:butterknife-compiler:$versions.butterKnife",
+        eventBus                 : "org.greenrobot:eventbus:$versions.eventBus",
+        flowlayoutmanager        : "com.xiaofeng.android:flowlayoutmanager:$versions.flowlayoutmanager",
+        materialRipple           : "com.balysv:material-ripple:$versions.materialRipple",
+        stetho                   : "com.facebook.stetho:stetho:$versions.stetho",
+        freshdownloadview        : "com.pitt.fresh.library:freshdownloadview:$versions.freshdownloadview",
+        leakcanary               : "com.squareup.leakcanary:leakcanary-android:$versions.leakcanary",
+        timber                   : "com.jakewharton.timber:timber:$versions.timber",
+        storio                   : "com.pushtorefresh.storio:sqlite:$versions.storio",
+        storioAnnotation         : "com.pushtorefresh.storio:sqlite-annotations:$versions.storio",
+        storioAnnotationProcessor: "com.pushtorefresh.storio:sqlite-annotations-processor:$versions.storio"
+]

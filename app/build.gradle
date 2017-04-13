@@ -1,0 +1,86 @@
+apply plugin: 'com.android.application'
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+android {
+    signingConfigs {
+        config {
+            keyAlias 'android'
+            keyPassword 'th@nh280490'
+            storeFile file('dpwallz_keystore.jks')
+            storePassword 'th@nh280490'
+        }
+    }
+
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
+
+    defaultConfig {
+        applicationId "com.dpanic.dpwallz"
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode versions.code
+        versionName versions.name
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
+
+    compile libraries.supportDesign
+    compile libraries.supportAppCompat
+
+    releaseCompile libraries.firebaseCore
+    releaseCompile libraries.firebaseCrash
+    compile libraries.firebaseMessaging
+    compile libraries.firebaseAds
+
+    compile libraries.rxJava
+    compile libraries.rxAndroid
+
+    compile libraries.butterKnife
+    annotationProcessor libraries.butterKnifeCompiler
+
+    compile libraries.dagger
+    annotationProcessor libraries.daggerCompiler
+
+    compile libraries.stetho
+    compile libraries.leakcanary
+    compile libraries.sqlBrite
+    compile libraries.okHttp
+    compile libraries.glide
+    compile libraries.jsoup
+    compile libraries.eventBus
+    compile libraries.flowlayoutmanager
+    compile libraries.materialRipple
+    compile libraries.freshdownloadview
+    compile libraries.timber
+    compile libraries.okHttpLoggingInterceptor
+
+    compile libraries.storio
+    compile libraries.storioAnnotation
+    annotationProcessor libraries.storioAnnotationProcessor
+
+}
+
+apply plugin: 'com.google.gms.google-services'
