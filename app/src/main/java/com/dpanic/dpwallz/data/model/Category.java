@@ -5,9 +5,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import com.dpanic.dpwallz.data.DB;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
+
 import rx.functions.Func1;
 import timber.log.Timber;
 
@@ -27,9 +29,11 @@ public class Category implements Parcelable {
     private static final String FIELD_THUMB_LINK = "thumbLink";
 
     public static final String CREATION_COMMAND =
-            "CREATE TABLE " + TABLE_NAME + " (" + FIELD_PKEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "CREATE TABLE " + TABLE_NAME + " (" +
+                    FIELD_PKEY + " INTEGER NOT NULL PRIMARY KEY, " +
                     FIELD_NAME + " TEXT NOT NULL, " +
-                    FIELD_LINK + " TEXT NOT NULL, " + FIELD_THUMB_LINK + " TEXT NOT NULL )";
+                    FIELD_LINK + " TEXT NOT NULL, " +
+                    FIELD_THUMB_LINK + " TEXT NOT NULL )";
     public static final Func1<Cursor, Category> MAPPER = new Func1<Cursor, Category>() {
         @Override
         public Category call(Cursor cursor) {
@@ -38,7 +42,7 @@ public class Category implements Parcelable {
     };
 
     @StorIOSQLiteColumn(name = FIELD_PKEY, key = true)
-    long id;
+    Long id; // need to be Long instead of long - required by StorIO
     @StorIOSQLiteColumn(name = FIELD_NAME)
     String name;
     @StorIOSQLiteColumn(name = FIELD_LINK)
@@ -55,7 +59,7 @@ public class Category implements Parcelable {
         setThumbLink(thumbLink);
     }
 
-    public Category(long id, String name, String link, String thumbLink) {
+    public Category(Long id, String name, String link, String thumbLink) {
         setId(id);
         setName(name);
         setLink(link);
@@ -81,11 +85,11 @@ public class Category implements Parcelable {
         }
     };
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -112,14 +116,14 @@ public class Category implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeLong(getId());
+        parcel.writeLong(getId() == null ? 0 : getId());
         parcel.writeString(getName());
         parcel.writeString(getLink());
         parcel.writeString(getThumbLink());
     }
 
     private static Category parseCursor(Cursor cursor) {
-        long id = DB.getLong(cursor, FIELD_PKEY);
+        Long id = DB.getLong(cursor, FIELD_PKEY);
         String name = DB.getString(cursor, FIELD_NAME);
         String link = DB.getString(cursor, FIELD_LINK);
         String thumbLink = DB.getString(cursor, FIELD_THUMB_LINK);
@@ -157,12 +161,12 @@ public class Category implements Parcelable {
         // Comment for later use
         Timber.e("onUpgrade Category: version " + updateVersion);
         switch (updateVersion) {
-        case 2:
-            database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-            database.execSQL(CREATION_COMMAND);
-            break;
-        default:
-            break;
+            case 2:
+                database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+                database.execSQL(CREATION_COMMAND);
+                break;
+            default:
+                break;
         }
     }
 

@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -117,13 +119,43 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             adView.setAdListener(new AdListener() {
                 @Override
                 public void onAdLoaded() {
-                    ((AdVH) holder).layoutAdContainer
-                            .setBackgroundColor(ContextCompat.getColor(mContext, R.color.color_white));
                     super.onAdLoaded();
+//                    if (((AdVH) holder).layoutAdContainer.getVisibility() == View.GONE) {
+//                        expand(((AdVH) holder).layoutAdContainer);
+                        ((AdVH) holder).layoutAdContainer.setBackgroundColor(ContextCompat.getColor(mContext, R.color.color_white));
+//                    }
                 }
             });
             ((AdVH) holder).layoutAdContainer.addView(adView);
         }
+    }
+
+    public void expand(final View v) {
+        v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final int targetHeight = v.getMeasuredHeight();
+
+        // Older versions of android (pre API 21) cancel animations for views with a height of 0.
+        v.getLayoutParams().height = 1;
+        v.setVisibility(View.VISIBLE);
+        Animation a = new Animation()
+        {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().height = interpolatedTime == 1
+                        ? ViewGroup.LayoutParams.WRAP_CONTENT
+                        : (int)(targetHeight * interpolatedTime);
+                v.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        // 1dp/ms
+        a.setDuration(400);
+        v.startAnimation(a);
     }
 
     @Override

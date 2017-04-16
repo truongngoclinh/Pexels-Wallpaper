@@ -19,6 +19,8 @@ import com.dpanic.dpwallz.busevent.NoResultFoundEvent;
 import com.dpanic.dpwallz.busevent.OpenImageEvent;
 import com.dpanic.dpwallz.data.model.Category;
 import com.dpanic.dpwallz.data.model.Image;
+import com.dpanic.dpwallz.injection.HasComponent;
+import com.dpanic.dpwallz.injection.component.MainComponent;
 import com.dpanic.dpwallz.ui.base.BaseActivity;
 import com.dpanic.dpwallz.ui.detail.DetailActivity;
 import com.dpanic.dpwallz.ui.imagelist.ImageListFragment;
@@ -27,7 +29,7 @@ import com.dpanic.dpwallz.utils.TextUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SearchActivity extends BaseActivity {
+public class SearchActivity extends BaseActivity implements HasComponent<MainComponent> {
 
     private static final String FRAGMENT_CATEGORY_IMAGE = "frag_category_image";
     private FragmentManager mFragmentManager;
@@ -41,6 +43,7 @@ public class SearchActivity extends BaseActivity {
 
     @BindView(R.id.search_no_result_layout)
     LinearLayout noResultLayout;
+    private MainComponent component;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,8 @@ public class SearchActivity extends BaseActivity {
 
     @Override
     protected void injectDependencies() {
+        component = MainComponent.Initializer.init(getAppComponent(), this);
+        component.inject(this);
     }
 
     @Override
@@ -138,5 +143,10 @@ public class SearchActivity extends BaseActivity {
             break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public MainComponent getComponent() {
+        return component;
     }
 }

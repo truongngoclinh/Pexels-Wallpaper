@@ -17,6 +17,7 @@ import com.dpanic.dpwallz.utils.FileUtil;
 import com.dpanic.dpwallz.utils.PermissionUtils;
 import rx.Observer;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 /**
  * Created by dpanic on 11/10/2016.
@@ -102,6 +103,8 @@ public class ImageActionHelper {
             return;
         }
 
+        Timber.e("event bus = " + eventBus);
+        Timber.e("send show event");
         eventBus.post(new ProgressDialogEvent(ProgressDialogEvent.SHOW_EVENT, 0));
 
         downloadId = DownloadUtil.enqueueDownload(context, img.getOriginalLink(), false);
@@ -116,6 +119,8 @@ public class ImageActionHelper {
                     public void run() {
 
                         eventBus.post(new ProgressDialogEvent(ProgressDialogEvent.DISMISS_EVENT, 0));
+
+                        Timber.e("send dismiss event");
 
                         performActionAfterDownload(action);
 
@@ -144,6 +149,7 @@ public class ImageActionHelper {
 
             @Override
             public void onNext(Integer progress) {
+                Timber.e("send update event");
                 eventBus.post(new ProgressDialogEvent(ProgressDialogEvent.UPDATE_EVENT, progress));
             }
         }));

@@ -1,7 +1,7 @@
 package com.dpanic.dpwallz.ui.detail;
 
 import java.util.ArrayList;
-import javax.inject.Inject;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -26,13 +26,15 @@ import butterknife.OnClick;
  * Project: DPWallz
  */
 
-public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.colorVH> {
+public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ColorVH> {
 
     private Context mContext;
+    private EventBus eventBus;
     private ArrayList<String> colorList;
 
-    public ColorAdapter(Context context) {
+    public ColorAdapter(Context context, EventBus eventBus) {
         this.mContext = context;
+        this.eventBus = eventBus;
     }
 
     public void setData(ArrayList<String> colorList) {
@@ -40,13 +42,13 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.colorVH> {
     }
 
     @Override
-    public colorVH onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ColorVH onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        return new colorVH(inflater.inflate(R.layout.color_item_layout, parent, false));
+        return new ColorVH(inflater.inflate(R.layout.color_item_layout, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(colorVH holder, int position) {
+    public void onBindViewHolder(ColorVH holder, int position) {
         holder.ivColorItem.setColorFilter(Color.parseColor(colorList.get(position)), PorterDuff.Mode.SRC_ATOP);
     }
 
@@ -55,12 +57,12 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.colorVH> {
         return colorList.size();
     }
 
-    class colorVH extends RecyclerView.ViewHolder {
+    class ColorVH extends RecyclerView.ViewHolder {
 
         @BindView(R.id.color_item)
         ImageView ivColorItem;
 
-        colorVH(View itemView) {
+        ColorVH(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
@@ -69,7 +71,7 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.colorVH> {
         void onClick() {
             String colorSearch = mContext.getResources().getString(R.string.string_color_search_prefix_text) + colorList.get(getAdapterPosition());
             Category category = new Category(colorSearch, TextUtil.getSearchLink(colorSearch), "");
-            EventBus.getDefault().post(new OpenCategoryEvent(category, true));
+            eventBus.post(new OpenCategoryEvent(category, true));
         }
     }
 }

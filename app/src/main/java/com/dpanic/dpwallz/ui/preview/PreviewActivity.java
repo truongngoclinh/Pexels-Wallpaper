@@ -90,6 +90,9 @@ public class PreviewActivity extends BaseActivity implements HasComponent<Previe
 
         ButterKnife.bind(this);
 
+        Timber.e("eventbus = " + eventBus);
+        Timber.e("dialog = " + progressDialog);
+
         setSupportActionBar(toolbar);
 
         actionBar = getSupportActionBar();
@@ -100,20 +103,41 @@ public class PreviewActivity extends BaseActivity implements HasComponent<Previe
         }
         setTitle("");
 
+        eventBus.register(this);
         init();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        eventBus.register(this);
+        if (!eventBus.isRegistered(this)) {
+            eventBus.register(this);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         eventBus.unregister(this);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onMessage(ProgressDialogEvent event) {
+        switch (event.getEventType()) {
+            case ProgressDialogEvent.SHOW_EVENT:
+                if (progressDialog != null) {
+                    progressDialog.setOnCancelListener(this);
+                    progressDialog.show();
+                }
+                break;
+            case ProgressDialogEvent.UPDATE_EVENT:
+                progressDialog.setProgress(event.getProgress());
+                break;
+            case ProgressDialogEvent.DISMISS_EVENT:
+                progressDialog.dismiss();
+                break;
+        }
     }
 
     @SuppressWarnings("unused")
@@ -182,25 +206,6 @@ public class PreviewActivity extends BaseActivity implements HasComponent<Previe
         });
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe
-    void onMessage(ProgressDialogEvent event) {
-        switch (event.getEventType()) {
-        case ProgressDialogEvent.SHOW_EVENT:
-            if (progressDialog != null) {
-                progressDialog.setOnCancelListener(this);
-                progressDialog.show();
-            }
-            break;
-        case ProgressDialogEvent.UPDATE_EVENT:
-            progressDialog.setProgress(event.getProgress());
-            break;
-        case ProgressDialogEvent.DISMISS_EVENT:
-            progressDialog.dismiss();
-            break;
-        }
-    }
-
     public void handleScrolling() {
         previewScrollView.smoothScrollBy(2, 0);
         mHandler.sendEmptyMessageDelayed(0, 50);
@@ -235,12 +240,6 @@ public class PreviewActivity extends BaseActivity implements HasComponent<Previe
                         preImage.setVisibility(View.VISIBLE);
                         clpImageLoading.setVisibility(View.GONE);
                         mHandler.sendEmptyMessage(0);
-                        Timber.e("onResourceReady: PreviewActivityModule");
-                        Timber.e("onResourceReady: size = " + (resource.getByteCount() / 1024));
-                        Timber.e("onResourceReady: isFromMemoryCache = " + isFromMemoryCache);
-                        Timber.e("onResourceReady: isFirstResource = " + isFirstResource);
-                        Timber.e("onResourceReady: resource w = " + resource.getWidth() + " - h = " +
-                                         resource.getHeight());
                         return false;
                     }
                 }).skipMemoryCache(true).into(preImage);

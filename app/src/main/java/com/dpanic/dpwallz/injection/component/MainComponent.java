@@ -10,6 +10,7 @@ import com.dpanic.dpwallz.injection.module.ActivityModule;
 import com.dpanic.dpwallz.injection.module.AdModule;
 import com.dpanic.dpwallz.injection.module.MainModule;
 import com.dpanic.dpwallz.injection.scope.PerActivityScope;
+import com.dpanic.dpwallz.ui.search.SearchActivity;
 import dagger.Component;
 
 /**
@@ -36,6 +37,7 @@ public interface MainComponent {
     }
 
     void inject(MainActivity activity);
+    void inject(SearchActivity activity);
 
     void inject(CategoryFragment baseFragment);
     void inject(ImageListFragment baseFragment);

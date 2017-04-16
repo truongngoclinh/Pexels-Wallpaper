@@ -1,7 +1,6 @@
 package com.dpanic.dpwallz.ui.detail;
 
 import java.util.ArrayList;
-import javax.inject.Inject;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,10 +26,12 @@ import butterknife.OnClick;
 public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagVH> {
 
     private Context mContext;
+    private EventBus eventBus;
     private ArrayList<String> tagList;
 
-    public TagAdapter(Context mContext) {
+    public TagAdapter(Context mContext, EventBus eventBus) {
         this.mContext = mContext;
+        this.eventBus = eventBus;
     }
 
     public void setData(ArrayList<String> tagList) {
@@ -67,7 +68,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagVH> {
         @OnClick(R.id.tag_item_container)
         void OnClick() {
             Category category = new Category(tagList.get(getAdapterPosition()), TextUtil.getSearchLink(tagList.get(getAdapterPosition())), "");
-            EventBus.getDefault().post(new OpenCategoryEvent(category, false));
+            eventBus.post(new OpenCategoryEvent(category, false));
         }
     }
 

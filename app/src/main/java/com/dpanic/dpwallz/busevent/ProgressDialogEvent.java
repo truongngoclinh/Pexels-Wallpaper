@@ -6,9 +6,9 @@ package com.dpanic.dpwallz.busevent;
  */
 
 public class ProgressDialogEvent {
-    public static final int SHOW_EVENT = 0;
-    public static final int UPDATE_EVENT = 1;
-    public static final int DISMISS_EVENT = 2;
+    public static final int SHOW_EVENT = 10;
+    public static final int UPDATE_EVENT = 11;
+    public static final int DISMISS_EVENT = 12;
     private int progress;
     private int eventType;
 

@@ -15,6 +15,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -46,6 +49,7 @@ import com.dpanic.dpwallz.utils.Constants;
 import com.dpanic.dpwallz.utils.DownloadUtil;
 import com.dpanic.dpwallz.utils.FileUtil;
 import com.dpanic.dpwallz.utils.HTMLParsingUtil;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.NativeExpressAdView;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
@@ -53,7 +57,6 @@ import com.xiaofeng.flowlayoutmanager.Alignment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -103,6 +106,9 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
 
     @BindView(R.id.fav_off_btn_container)
     LinearLayout btnFavOff;
+
+    @BindView(R.id.ctn_outer_ad)
+    LinearLayout ctnAdOuter;
 
 //    @BindView(R.id.detail_dimen_vertical_divider)
 //    ImageView verticalDivider;
@@ -206,6 +212,8 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
     @Override
     protected void onPause() {
         super.onPause();
+
+        eventBus.unregister(this);
     }
 
     @Override
@@ -215,41 +223,33 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
         eventBus.register(this);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        eventBus.unregister(this);
-    }
-
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe
     public void onMessage(ProgressDialogEvent event) {
         switch (event.getEventType()) {
-
-        case ProgressDialogEvent.SHOW_EVENT:
-            if (progressDialog != null) {
-                progressDialog.setOnCancelListener(this);
-                progressDialog.show();
-            }
-            break;
-        case ProgressDialogEvent.UPDATE_EVENT:
-            progressDialog.setProgress(event.getProgress());
-            break;
-        case ProgressDialogEvent.DISMISS_EVENT:
-            progressDialog.dismiss();
-            break;
+            case ProgressDialogEvent.SHOW_EVENT:
+                if (progressDialog != null) {
+                    progressDialog.setOnCancelListener(this);
+                    progressDialog.show();
+                }
+                break;
+            case ProgressDialogEvent.UPDATE_EVENT:
+                progressDialog.setProgress(event.getProgress());
+                break;
+            case ProgressDialogEvent.DISMISS_EVENT:
+                progressDialog.dismiss();
+                break;
         }
     }
 
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe
     public void onMessage(OpenCategoryEvent event) {
         launchSearchActivity(event.getCategory(), event.isColor());
     }
 
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe
     public void onMessage(DownloadEvent event) {
         if (event.getStatus() == DownloadEvent.STATUS_COMPLETE) {
             image.setLocalLink(FileUtil.getLocalPath(image.getOriginalLink()));
@@ -282,7 +282,6 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
         colors = new ArrayList<>();
         tags = new ArrayList<>();
 
-//        mColorAdapter = new ColorAdapter(mContext, colors);
         mColorAdapter.setData(colors);
         FixFlowLayoutManager mColorLayoutManager = new FixFlowLayoutManager();
         mColorLayoutManager.setAutoMeasureEnabled(true);
@@ -292,7 +291,6 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
         rvColors.setHasFixedSize(true);                 // fix scroll problem of rv in nestedscrollview
         rvColors.setNestedScrollingEnabled(false);      // fix scroll problem of rv in nestedscrollview
 
-//        mTagAdapter = new TagAdapter(mContext, tags);
         mTagAdapter.setData(tags);
         FixFlowLayoutManager mTagLayoutManager = new FixFlowLayoutManager();
         mTagLayoutManager.setAutoMeasureEnabled(true);
@@ -302,22 +300,6 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
         rvTags.setHasFixedSize(true);                   // fix scroll problem of rv in nestedscrollview
         rvTags.setNestedScrollingEnabled(false);        // fix scroll problem of rv in nestedscrollview
 
-//        ViewTreeObserver viewTreeObserver = detailDimenContainer.getViewTreeObserver();
-//        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                if (detailDimenContainer.getMeasuredHeight() > 0) {
-//                    ViewTreeObserver vto = detailDimenContainer.getViewTreeObserver();
-//                    vto.removeOnGlobalLayoutListener(this);
-//                    RelativeLayout.LayoutParams layoutParams =
-//                            (RelativeLayout.LayoutParams) verticalDivider.getLayoutParams();
-//                    layoutParams.height = detailDimenContainer.getMeasuredHeight();
-//
-//                    verticalDivider.setLayoutParams(layoutParams);
-//                }
-//            }
-//        });
-
         boolean isNetworkAvailable = DownloadUtil.checkNetworkStatus(mContext.getApplicationContext());
 
 //        AdRequest mNativeAdRequest = new AdRequest.Builder().build();
@@ -325,6 +307,15 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
 //        String native_ads_id = getResources().getString(R.string.string_detail_native_ad_id);
 //        adView.setAdUnitId(native_ads_id);
 //        adView.setAdSize(new AdSize(360, 100));
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                if (ctnAdOuter.getVisibility() == View.GONE) {
+                    expand(ctnAdOuter);
+                }
+            }
+        });
         adView.loadAd(mNativeAdRequest);
 //        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
 //                                                                             ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -334,10 +325,39 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
 //        adView.setLayoutParams(params);
 
         if (isNetworkAvailable && isShowAds) {
-            layoutAd.setVisibility(View.VISIBLE);
+//            layoutAd.setVisibility(View.VISIBLE);
             layoutAd.addView(adView);
         }
     }
+
+    public static void expand(final View v) {
+        v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final int targetHeight = v.getMeasuredHeight();
+
+        // Older versions of android (pre API 21) cancel animations for views with a height of 0.
+        v.getLayoutParams().height = 1;
+        v.setVisibility(View.VISIBLE);
+        Animation a = new Animation()
+        {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().height = interpolatedTime == 1
+                        ? ViewGroup.LayoutParams.WRAP_CONTENT
+                        : (int)(targetHeight * interpolatedTime);
+                v.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        // 1dp/ms
+        a.setDuration(400);
+        v.startAnimation(a);
+    }
+
 
     @SuppressWarnings("unused")
     @OnClick({ R.id.fav_off_btn_container, R.id.fav_on_btn_container })
@@ -592,7 +612,7 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
 
     @Override
     public void onCancel(DialogInterface dialog) {
-
+        actionHelper.cancelDownload();
     }
 
     @Override

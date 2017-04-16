@@ -1,11 +1,5 @@
 package com.dpanic.dpwallz.ui.category;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import javax.inject.Inject;
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,17 +11,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
 import com.dpanic.dpwallz.R;
-import com.dpanic.dpwallz.application.DPWallz;
-import com.dpanic.dpwallz.injection.component.DaggerMainComponent;
-import com.dpanic.dpwallz.injection.component.MainComponent;
-import com.dpanic.dpwallz.injection.module.ActivityModule;
 import com.dpanic.dpwallz.data.StorIODBManager;
 import com.dpanic.dpwallz.data.model.Category;
+import com.dpanic.dpwallz.injection.component.MainComponent;
 import com.dpanic.dpwallz.ui.base.BaseFragment;
 import com.dpanic.dpwallz.utils.HTMLParsingUtil;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -209,7 +209,7 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
         mDataManager.addCategories(list).subscribe(new Action1<PutResults<Category>>() {
             @Override
             public void call(PutResults<Category> categoryPutResults) {
-                // TODO log here
+                Timber.d(categoryPutResults.numberOfInserts() + " categories inserted");
             }
         });
     }
