@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.dpanic.dpwallz"
+<manifest package="com.dpanic.wallz.pexels"
           xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools">
 
@@ -16,15 +16,16 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name=".application.DPWallz"
-        android:theme="@style/AppTheme">
+        android:name="com.dpanic.wallz.pexels.application.DPWallz"
+        android:theme="@style/AppTheme"
+        android:fullBackupContent="@xml/backup_descriptor">
 
         <meta-data
-            android:name="com.dpanic.dpwallz.utils.CustomGlideModule"
+            android:name="com.dpanic.wallz.pexels.utils.CustomGlideModule"
             android:value="GlideModule"/>
 
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name="com.dpanic.wallz.pexels.ui.main.MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
@@ -36,12 +37,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.detail.DetailActivity"
+            android:name="com.dpanic.wallz.pexels.ui.detail.DetailActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@style/AppTheme">
         </activity>
         <activity
-            android:name=".ui.preview.PreviewActivity"
+            android:name="com.dpanic.wallz.pexels.ui.preview.PreviewActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@style/AppTheme">
 
@@ -49,7 +50,7 @@
             <!-- <meta-data android:value="GlideModule" tools:node="remove" android:name="com.bumptech.glide.integration.okhttp.OkHttpGlideModule" /> -->
         </activity>
         <activity
-            android:name=".ui.search.SearchActivity"
+            android:name="com.dpanic.wallz.pexels.ui.search.SearchActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             >
         </activity>
@@ -65,7 +66,7 @@
         <!--android:theme="@android:style/Theme.Translucent"/>-->
 
         <service
-            android:name=".service.MyFirebaseMessagingService"
+            android:name="com.dpanic.wallz.pexels.service.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
@@ -73,7 +74,7 @@
         </service>
 
         <service
-            android:name=".service.MyFirebaseInstanceIdService"
+            android:name="com.dpanic.wallz.pexels.service.MyFirebaseInstanceIdService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>

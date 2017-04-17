@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DPWallz</string>
+    <string name="app_name">Pexels</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -17,7 +17,7 @@
     <string name="string_favorite">Favorite</string>
     <string name="string_download">Download</string>
     <string name="string_set_as">Set as</string>
-    <string name="string_prefix_by">by %s</string>
+    <string name="string_prefix_by">By %s</string>
     <string name="string_downloading">Downloading</string>
     <string name="string_the_image_has_already_downloaded">The image has already downloaded</string>
     <string name="string_download_completed">Download completed</string>
@@ -34,15 +34,16 @@
     <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
     <string name="string_image_list_native_ad_id">ca-app-pub-9744416729639710/2174309584</string>
     <string name="string_detail_native_ad_id">ca-app-pub-9744416729639710/9438394385</string>
+
     <string name="string_color">Color</string>
     <string name="permission_explaination">Storage permission is required in order to download photos to external storage. \nDo you want to grant storage permission?</string>
-    <string name="string_notification_daily_content">Enjoy new daily photos with DPWallz</string>
+    <string name="string_notification_daily_content">Enjoy new daily photos with Pexels wallpaper</string>
     <string name="string_no_result_found">No Result Found</string>
     <string name="string_no_favorite_yet">No favorite yet</string>
     <string name="string_find_your_photos">Find your photo and click</string>
     <string name="string_no_download_yet">No download yet</string>
     <string name="string_share_this_app">Share this app</string>
     <string name="share_app">Share app</string>
-    <string name="string_ok">Ok</string>
+    <string name="string_ok">OK</string>
     <string name="string_cancel">Cancel</string>
 </resources>

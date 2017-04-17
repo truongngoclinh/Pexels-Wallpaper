@@ -11,7 +11,7 @@ android {
         config {
             keyAlias 'android'
             keyPassword 'th@nh280490'
-            storeFile file('dpwallz_keystore.jks')
+            storeFile file('pexelswallz.jks')
             storePassword 'th@nh280490'
         }
     }
@@ -20,7 +20,7 @@ android {
     buildToolsVersion versions.buildTools
 
     defaultConfig {
-        applicationId "com.dpanic.dpwallz"
+        applicationId "com.dpanic.wallz.pexels"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
         versionCode versions.code
@@ -76,11 +76,12 @@ dependencies {
     compile libraries.freshdownloadview
     compile libraries.timber
     compile libraries.okHttpLoggingInterceptor
+    compile libraries.calligraphy
+    compile libraries.circleImageView
 
     compile libraries.storio
     compile libraries.storioAnnotation
     annotationProcessor libraries.storioAnnotationProcessor
-
 }
 
 apply plugin: 'com.google.gms.google-services'

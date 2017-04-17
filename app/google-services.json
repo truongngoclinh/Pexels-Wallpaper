@@ -19,7 +19,51 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.dpanic.dpwallz",
-            "certificate_hash": "C1FA8416E6D0296D52ACE204648A500EF2D05FDB"
+            "certificate_hash": "c1fa8416e6d0296d52ace204648a500ef2d05fdb"
+          }
+        },
+        {
+          "client_id": "250439161697-r8acleavis2dsv2rjtmcp7as3dnbou1p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBARkBSEj2PfdZs79G3sKMlffnXJBmKpYY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "250439161697-r8acleavis2dsv2rjtmcp7as3dnbou1p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250439161697:android:21fa73be934b2a99",
+        "android_client_info": {
+          "package_name": "com.dpanic.wallz.pexels"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "250439161697-j4o3db65m5tl1p36u33vnafq27e6vp4o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dpanic.wallz.pexels",
+            "certificate_hash": "fecfbf97bf6172ffb2388c341f09d9c97d4d2444"
           }
         },
         {
