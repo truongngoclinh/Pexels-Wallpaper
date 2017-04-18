@@ -2,6 +2,7 @@ package com.dpanic.wallz.pexels.ui.common;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -46,16 +47,22 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private Context mContext;
     private ArrayList<Image> imageList = new ArrayList<>();
     private AdRequest mNativeAdRequest;
-    private final NativeExpressAdView adView;
+    private final NativeExpressAdView mAdView;
 
     private int fragmentType = 0;
 
     public ImageAdapter(Context context, AdRequest adRequest, NativeExpressAdView adView) {
         mContext = context;
-        this.adView = adView;
+        this.mAdView = adView;
         this.mNativeAdRequest = adRequest;
 
-        this.adView.setAdUnitId(mContext.getString(R.string.string_image_list_native_ad_id));
+        this.mAdView.setAdUnitId(mContext.getString(R.string.string_image_list_native_ad_id));
+        this.mAdView.post(new Runnable() {
+            @Override
+            public void run() {
+                mAdView.loadAd(mNativeAdRequest);
+            }
+        });
     }
 
     public void setData(ArrayList<Image> imageList) {
@@ -114,24 +121,13 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         } else if (holder instanceof LoadMoreVH) {
             ((LoadMoreVH) holder).loadingProgressBar.smoothToShow();
         } else if (holder instanceof AdVH) {
-            ViewGroup parent = (ViewGroup) adView.getParent();
+            ViewGroup parent = (ViewGroup) mAdView.getParent();
             if (parent != null) {
-                parent.removeView(adView);
+                parent.removeView(mAdView);
             }
 
-            adView.loadAd(mNativeAdRequest);
-            adView.setAdListener(new AdListener() {
-                @Override
-                public void onAdLoaded() {
-                    super.onAdLoaded();
-                    if (((AdVH) holder).layoutAdContainer.getVisibility() == View.GONE) {
-//                        expand(((AdVH) holder).layoutAdContainer);
-                        ((AdVH) holder).layoutAdContainer.setVisibility(View.VISIBLE);
-                        ((AdVH) holder).layoutAdContainer.setBackgroundColor(ContextCompat.getColor(mContext, R.color.color_white));
-                    }
-                }
-            });
-            ((AdVH) holder).layoutAdContainer.addView(adView);
+            ((AdVH) holder).layoutAdContainer.addView(mAdView);
+            ((AdVH) holder).layoutAdContainer.setBackgroundColor(Color.WHITE);
         }
     }
 

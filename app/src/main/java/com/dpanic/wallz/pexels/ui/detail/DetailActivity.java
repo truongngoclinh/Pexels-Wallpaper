@@ -9,13 +9,14 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.ImageView;
@@ -478,7 +479,7 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
                     public void onError(Throwable throwable) {
                         if (throwable instanceof SocketTimeoutException || throwable instanceof UnknownHostException) {
                             layoutError.setVisibility(View.VISIBLE);
-                            clpContentLoading.smoothToHide();
+                            clpContentLoading.hide();
                         }
                     }
 
@@ -520,8 +521,14 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
         mColorAdapter.notifyDataSetChanged();
         mTagAdapter.notifyDataSetChanged();
 
-        clpContentLoading.smoothToHide();
+        clpContentLoading.hide();
+
         mContentLayout.setVisibility(View.VISIBLE);
+
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1f);
+        alphaAnimation.setDuration(400);
+        alphaAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+        mContentLayout.startAnimation(alphaAnimation);
     }
 
     private void loadBackdropImage(Image image) {
@@ -543,7 +550,7 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
                         Timber.d("onResourceReady: isFirstResource = " + isFirstResource);
                         Timber.d("onResourceReady: resource w = " + resource.getWidth() + " - h = " +
                                 resource.getHeight());
-                        clpBackdropLoading.smoothToHide();
+                        clpBackdropLoading.hide();
                         return false;
                     }
                 }).dontAnimate().into(backDropImage);

@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
-    android:visibility="gone"
     android:background="@color/color_fragment_background">
 
 </RelativeLayout>

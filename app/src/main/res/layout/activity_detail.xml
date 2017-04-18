@@ -519,6 +519,7 @@
                 android:layout_marginTop="30dp"
                 style="@style/AVLoadingIndicatorView.Small"
                 android:layout_marginBottom="30dp"
+                app:indicatorColor="@color/color_black"
                 app:indicatorName="LineScalePulseOutRapidIndicator"
                 />
 
