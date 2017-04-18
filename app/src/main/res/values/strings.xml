@@ -31,9 +31,9 @@
         This is an ad unit ID for an interstitial test ad. Replace with your own interstitial ad unit id.
         For more information, see https://support.google.com/admob/answer/3052638
     <!- -->
-    <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
-    <string name="string_image_list_native_ad_id">ca-app-pub-9744416729639710/2174309584</string>
-    <string name="string_detail_native_ad_id">ca-app-pub-9744416729639710/9438394385</string>
+    <!--<string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>-->
+    <string name="string_image_list_native_ad_id">ca-app-pub-9744416729639710/6384909188</string>
+    <string name="string_detail_native_ad_id">ca-app-pub-9744416729639710/7861642389</string>
 
     <string name="string_color">Color</string>
     <string name="permission_explaination">Storage permission is required in order to download photos to external storage. \nDo you want to grant storage permission?</string>

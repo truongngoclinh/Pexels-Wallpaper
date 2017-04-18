@@ -327,6 +327,7 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
 //        String native_ads_id = getResources().getString(R.string.string_detail_native_ad_id);
 //        adView.setAdUnitId(native_ads_id);
 //        adView.setAdSize(new AdSize(360, 100));
+        adView.setAdUnitId(getString(R.string.string_detail_native_ad_id));
         adView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {

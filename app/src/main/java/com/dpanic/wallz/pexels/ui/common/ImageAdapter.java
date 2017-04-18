@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,6 +54,8 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         mContext = context;
         this.adView = adView;
         this.mNativeAdRequest = adRequest;
+
+        this.adView.setAdUnitId(mContext.getString(R.string.string_image_list_native_ad_id));
     }
 
     public void setData(ArrayList<Image> imageList) {
@@ -123,10 +124,11 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 @Override
                 public void onAdLoaded() {
                     super.onAdLoaded();
-//                    if (((AdVH) holder).layoutAdContainer.getVisibility() == View.GONE) {
+                    if (((AdVH) holder).layoutAdContainer.getVisibility() == View.GONE) {
 //                        expand(((AdVH) holder).layoutAdContainer);
+                        ((AdVH) holder).layoutAdContainer.setVisibility(View.VISIBLE);
                         ((AdVH) holder).layoutAdContainer.setBackgroundColor(ContextCompat.getColor(mContext, R.color.color_white));
-//                    }
+                    }
                 }
             });
             ((AdVH) holder).layoutAdContainer.addView(adView);

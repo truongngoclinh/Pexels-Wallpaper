@@ -26,8 +26,7 @@ public class AdModule {
     @Provides
     NativeExpressAdView provideAdView(Application application) {
         final NativeExpressAdView adView = new NativeExpressAdView(application);
-        String native_ads_id = application.getResources().getString(R.string.string_image_list_native_ad_id);
-        adView.setAdUnitId(native_ads_id);
+//        String native_ads_id = application.getResources().getString(R.string.string_image_list_native_ad_id);
         adView.setAdSize(new AdSize(360, 100));
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                                                              ViewGroup.LayoutParams.WRAP_CONTENT);
