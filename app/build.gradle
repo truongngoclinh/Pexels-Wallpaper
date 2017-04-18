@@ -78,6 +78,7 @@ dependencies {
     compile libraries.okHttpLoggingInterceptor
     compile libraries.calligraphy
     compile libraries.circleImageView
+    compile libraries.avLoadingIndicatorView
 
     compile libraries.storio
     compile libraries.storioAnnotation

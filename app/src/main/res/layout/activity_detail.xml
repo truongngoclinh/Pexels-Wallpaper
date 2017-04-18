@@ -40,14 +40,24 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-            <android.support.v4.widget.ContentLoadingProgressBar
+            <!--<android.support.v4.widget.ContentLoadingProgressBar-->
+                <!--android:id="@+id/clp_backdrop_loading"-->
+                <!--style="?android:attr/progressBarStyle"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_marginBottom="10dp"-->
+                <!--android:layout_marginTop="10dp"/>-->
+            <com.wang.avi.AVLoadingIndicatorView
                 android:id="@+id/clp_backdrop_loading"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="20dp"
+                style="@style/AVLoadingIndicatorView.Small"
+                android:layout_marginBottom="20dp"
+                app:indicatorName="LineScalePulseOutRapidIndicator"
+                />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -492,14 +502,25 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <android.support.v4.widget.ContentLoadingProgressBar
+            <!--<android.support.v4.widget.ContentLoadingProgressBar-->
+                <!--android:id="@+id/clp_detail_content"-->
+                <!--style="?android:attr/progressBarStyle"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="30dp"-->
+                <!--android:layout_marginTop="30dp"/>-->
+
+            <com.wang.avi.AVLoadingIndicatorView
                 android:id="@+id/clp_detail_content"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_centerHorizontal="true"
-                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                style="@style/AVLoadingIndicatorView.Small"
                 android:layout_marginBottom="30dp"
-                android:layout_marginTop="30dp"/>
+                app:indicatorName="LineScalePulseOutRapidIndicator"
+                />
 
             <LinearLayout
                 android:id="@+id/detail_error_container"
@@ -518,6 +539,7 @@
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_marginBottom="20dp"
+                    android:tint="@color/colorAccent"
                     android:contentDescription="@string/string_no_internet_connection"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_no_internet_accent"/>
@@ -528,7 +550,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="25dp"
                     android:text="@string/string_no_internet_connection"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/color_black"
                     android:textSize="16sp"/>
 
                 <com.balysv.materialripple.MaterialRippleLayout
@@ -557,7 +579,7 @@
                             android:duplicateParentState="true"
                             android:text="@string/string_retry"
                             android:textAllCaps="true"
-                            android:textColor="@color/colorAccent"
+                            android:textColor="@color/color_black"
                             android:textSize="16sp"
                             android:textStyle="bold"/>
                     </LinearLayout>

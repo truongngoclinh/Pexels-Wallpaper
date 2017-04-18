@@ -103,7 +103,6 @@ public class ImageActionHelper {
             return;
         }
 
-        Timber.e("event bus = " + eventBus);
         Timber.e("send show event");
         eventBus.post(new ProgressDialogEvent(ProgressDialogEvent.SHOW_EVENT, 0));
 
@@ -170,8 +169,7 @@ public class ImageActionHelper {
         }
     }
 
-    @SuppressWarnings("unused")
-    private void shareAction() {
+    public void shareAction() {
         if (FileUtil.isFileDownloaded(img.getOriginalLink())) {
             performShare();
         } else {

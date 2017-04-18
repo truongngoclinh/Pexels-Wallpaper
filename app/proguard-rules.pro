@@ -88,3 +88,6 @@
 -keep public class org.jsoup.** {
 public *;
 }
+
+-keep class com.wang.avi.** { *; }
+-keep class com.wang.avi.indicators.** { *; }

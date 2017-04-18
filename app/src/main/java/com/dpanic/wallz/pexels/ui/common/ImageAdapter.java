@@ -25,6 +25,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -110,7 +111,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(((ImageVH) holder).imageView);
         } else if (holder instanceof LoadMoreVH) {
-            ((LoadMoreVH) holder).loadingProgressBar.setIndeterminate(true);
+            ((LoadMoreVH) holder).loadingProgressBar.smoothToShow();
         } else if (holder instanceof AdVH) {
             ViewGroup parent = (ViewGroup) adView.getParent();
             if (parent != null) {
@@ -196,7 +197,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     class LoadMoreVH extends RecyclerView.ViewHolder {
 
         @BindView(R.id.progressbar_load_more)
-        ContentLoadingProgressBar loadingProgressBar;
+        AVLoadingIndicatorView loadingProgressBar;
 
         LoadMoreVH(View itemView) {
             super(itemView);

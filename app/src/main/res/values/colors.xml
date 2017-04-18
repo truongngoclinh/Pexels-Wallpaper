@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#484759</color>
     <!--<color name="colorAccent">#4da3e0</color>-->
     <color name="colorAccent">#1bcedf</color>
-    <color name="color_progress_circle">#a0cdee</color>
+    <color name="color_progress_circle">#42FFFFFF</color>
 
     <color name="color_white">#FFFFFF</color>
 
@@ -14,7 +14,7 @@
     <color name="color_black">#000000</color>
 
     <color name="color_primary_26">#42484759</color>
-    <color name="color_primary_60">#96484759</color>
+    <color name="color_primary_50">#80484759</color>
     <color name="color_prev_toolbar_background">#48000000</color>
     <color name="color_fragment_background">#585875</color>
 </resources>

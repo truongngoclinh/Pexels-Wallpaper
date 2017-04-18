@@ -53,6 +53,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.NativeExpressAdView;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
+import com.wang.avi.AVLoadingIndicatorView;
 import com.xiaofeng.flowlayoutmanager.Alignment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -79,7 +80,7 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
     Toolbar toolbar;
 
     @BindView(R.id.clp_backdrop_loading)
-    ContentLoadingProgressBar clpBackdropLoading;
+    AVLoadingIndicatorView clpBackdropLoading;
 
     @BindView(R.id.detail_backdrop_image)
     ImageView backDropImage;
@@ -121,7 +122,7 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
     LinearLayout mContentLayout;
 
     @BindView(R.id.clp_detail_content)
-    ContentLoadingProgressBar clpContentLoading;
+    AVLoadingIndicatorView clpContentLoading;
 
     @BindView(R.id.detail_error_container)
     LinearLayout layoutError;
@@ -194,8 +195,11 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
                 previewBundle.putParcelable(Constants.IMAGE_INSTANCE, image);
                 previewIntent.putExtras(previewBundle);
 
+                unregisterEventBus();
+
                 startActivity(previewIntent);
             }
+
         });
 
         actionHelper.setImage(image);
@@ -203,41 +207,56 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
         loadData();
     }
 
+    private void unregisterEventBus() {
+        if (eventBus.isRegistered(this)) {
+            eventBus.unregister(this);
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
         performingAction = false;
+
+        registerEventBus();
+    }
+
+    private void registerEventBus() {
+        if (!eventBus.isRegistered(this)) {
+            eventBus.register(this);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        eventBus.unregister(this);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        eventBus.register(this);
+    protected void onStop() {
+        super.onStop();
+        unregisterEventBus();
     }
 
     @SuppressWarnings("unused")
     @Subscribe
     public void onMessage(ProgressDialogEvent event) {
+        Timber.e("ProgressDialogEvent");
         switch (event.getEventType()) {
             case ProgressDialogEvent.SHOW_EVENT:
+                Timber.w("SHOW_EVENT");
                 if (progressDialog != null) {
                     progressDialog.setOnCancelListener(this);
                     progressDialog.show();
                 }
                 break;
             case ProgressDialogEvent.UPDATE_EVENT:
+                Timber.w("UPDATE_EVENT");
                 progressDialog.setProgress(event.getProgress());
                 break;
             case ProgressDialogEvent.DISMISS_EVENT:
+                Timber.w("DISMISS_EVENT");
                 progressDialog.dismiss();
                 break;
         }
@@ -386,6 +405,14 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
         }
     }
 
+    @OnClick(R.id.btn_share)
+    void shareAction() {
+        if (!performingAction) {
+            performingAction = true;
+            actionHelper.shareAction();
+        }
+    }
+
     @SuppressWarnings("unused")
     @OnClick(R.id.btn_set_as)
     void setAsAction() {
@@ -398,7 +425,7 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
     @SuppressWarnings("unused")
     @OnClick(R.id.detail_btn_retry)
     void retryAction() {
-        clpContentLoading.setVisibility(View.VISIBLE);
+        clpContentLoading.smoothToShow();
         layoutError.setVisibility(View.GONE);
 
         loadData();
@@ -450,7 +477,7 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
                     public void onError(Throwable throwable) {
                         if (throwable instanceof SocketTimeoutException || throwable instanceof UnknownHostException) {
                             layoutError.setVisibility(View.VISIBLE);
-                            clpContentLoading.setVisibility(View.GONE);
+                            clpContentLoading.smoothToHide();
                         }
                     }
 
@@ -492,12 +519,12 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
         mColorAdapter.notifyDataSetChanged();
         mTagAdapter.notifyDataSetChanged();
 
-        clpContentLoading.setVisibility(View.GONE);
+        clpContentLoading.smoothToHide();
         mContentLayout.setVisibility(View.VISIBLE);
     }
 
     private void loadBackdropImage(Image image) {
-        clpBackdropLoading.setVisibility(View.VISIBLE);
+        clpBackdropLoading.smoothToShow();
         Glide.with(this).load(image.getLargeLink()).asBitmap().diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .listener(new RequestListener<String, Bitmap>() {
                     @Override
@@ -515,7 +542,7 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
                         Timber.d("onResourceReady: isFirstResource = " + isFirstResource);
                         Timber.d("onResourceReady: resource w = " + resource.getWidth() + " - h = " +
                                 resource.getHeight());
-                        clpBackdropLoading.setVisibility(View.GONE);
+                        clpBackdropLoading.smoothToHide();
                         return false;
                     }
                 }).dontAnimate().into(backDropImage);

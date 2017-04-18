@@ -90,9 +90,9 @@ public class MainActivity extends BaseActivity
 
         mFragmentManager = getSupportFragmentManager();
 
-        initSharePreferenceValues();
+        initSharedPreferenceValues();
 
-        subscribeToDPWallzTopic();
+        subscribeTopic();
 
         launchExploreFragment();
     }
@@ -136,11 +136,11 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    private void subscribeToDPWallzTopic() {
+    private void subscribeTopic() {
         if (BuildConfig.DEBUG) {
-            mFirebaseMessaging.subscribeToTopic("DPWallzDebug");
+            mFirebaseMessaging.subscribeToTopic(getString(R.string.app_name_debug));
         } else {
-             mFirebaseMessaging.subscribeToTopic(getResources().getString(R.string.app_name));
+            mFirebaseMessaging.subscribeToTopic(getResources().getString(R.string.app_name));
         }
     }
 
@@ -155,7 +155,7 @@ public class MainActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void initSharePreferenceValues() {
+    private void initSharedPreferenceValues() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(Constants.IS_SHOW_ADS, true);
