@@ -2,7 +2,7 @@ package com.dpanic.wallz.pexels.busevent;
 
 /**
  * Created by dpanic on 10/12/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class DownloadEvent {

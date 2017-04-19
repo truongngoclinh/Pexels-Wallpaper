@@ -414,7 +414,7 @@ public class MainActivity extends BaseActivity
     }
 
     //    @Override
-//    protected void injectDependencies(DPWallz application, AppComponent component) {
+//    protected void injectDependencies(App application, AppComponent component) {
 //        component.inject(this);
 //    }
 }

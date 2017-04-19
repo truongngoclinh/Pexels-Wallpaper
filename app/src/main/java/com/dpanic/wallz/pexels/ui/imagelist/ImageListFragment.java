@@ -33,7 +33,7 @@ import timber.log.Timber;
 
 /**
  * Created by dpanic on 29/09/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class ImageListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -291,7 +291,7 @@ public class ImageListFragment extends BaseFragment implements SwipeRefreshLayou
     }
 
 //    @Override
-//    protected void injectDependencies(DPWallz application, AppComponent component) {
+//    protected void injectDependencies(App application, AppComponent component) {
 //        component.inject(this);
 //    }
 

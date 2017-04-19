@@ -9,7 +9,7 @@ import com.dpanic.wallz.pexels.data.model.Category;
 
 /**
  * Created by dpanic on 9/29/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class DBHelper extends SQLiteOpenHelper {

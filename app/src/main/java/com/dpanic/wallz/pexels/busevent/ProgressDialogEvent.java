@@ -2,7 +2,7 @@ package com.dpanic.wallz.pexels.busevent;
 
 /**
  * Created by dpanic on 3/3/2017.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class ProgressDialogEvent {

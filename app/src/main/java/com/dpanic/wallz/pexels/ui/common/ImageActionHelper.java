@@ -21,7 +21,7 @@ import timber.log.Timber;
 
 /**
  * Created by dpanic on 11/10/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class ImageActionHelper {
@@ -149,6 +149,7 @@ public class ImageActionHelper {
             @Override
             public void onNext(Integer progress) {
                 Timber.e("send update event");
+                Timber.w("progress on next");
                 eventBus.post(new ProgressDialogEvent(ProgressDialogEvent.UPDATE_EVENT, progress));
             }
         }));

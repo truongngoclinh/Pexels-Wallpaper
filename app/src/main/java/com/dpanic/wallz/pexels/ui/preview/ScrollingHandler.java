@@ -8,7 +8,7 @@ import android.os.Message;
 
 /**
  * Created by dpanic on 3/3/2017.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class ScrollingHandler extends Handler {

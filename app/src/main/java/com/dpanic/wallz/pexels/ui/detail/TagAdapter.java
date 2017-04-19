@@ -20,7 +20,7 @@ import butterknife.OnClick;
 
 /**
  * Created by dpanic on 10/7/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagVH> {

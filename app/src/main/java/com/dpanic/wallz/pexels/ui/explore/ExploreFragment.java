@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by dpanic on 9/23/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class ExploreFragment extends BaseFragment {
@@ -68,7 +68,7 @@ public class ExploreFragment extends BaseFragment {
     }
 
     //    @Override
-//    protected void injectDependencies(DPWallz application, AppComponent component) {
+//    protected void injectDependencies(App application, AppComponent component) {
 //        component.inject(this);
 //    }
 }

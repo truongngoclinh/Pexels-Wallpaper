@@ -28,7 +28,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.dpanic.wallz.pexels.R;
-import com.dpanic.wallz.pexels.application.DPWallz;
+import com.dpanic.wallz.pexels.application.App;
 import com.dpanic.wallz.pexels.busevent.DownloadEvent;
 import com.dpanic.wallz.pexels.busevent.ProgressDialogEvent;
 import com.dpanic.wallz.pexels.data.StorIODBManager;
@@ -40,6 +40,7 @@ import com.dpanic.wallz.pexels.ui.common.CustomProgressDialog;
 import com.dpanic.wallz.pexels.ui.common.ImageActionHelper;
 import com.dpanic.wallz.pexels.utils.Constants;
 import com.dpanic.wallz.pexels.utils.FileUtil;
+import com.wang.avi.AVLoadingIndicatorView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -60,7 +61,7 @@ public class PreviewActivity extends BaseActivity implements HasComponent<Previe
     RelativeLayout layoutError;
 
     @BindView(R.id.preview_loading_progress)
-    ContentLoadingProgressBar clpImageLoading;
+    AVLoadingIndicatorView clpImageLoading;
 
     private String imgLink;
     private Image image;
@@ -118,6 +119,12 @@ public class PreviewActivity extends BaseActivity implements HasComponent<Previe
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
         eventBus.unregister(this);
     }
 
@@ -153,7 +160,7 @@ public class PreviewActivity extends BaseActivity implements HasComponent<Previe
             mDataManager.addImage(image).subscribe();
         } else {
             layoutError.setVisibility(View.VISIBLE);
-            clpImageLoading.setVisibility(View.GONE);
+            clpImageLoading.hide();
             Throwable throwable = event.getException();
 
             actionBar.show();
@@ -216,8 +223,13 @@ public class PreviewActivity extends BaseActivity implements HasComponent<Previe
             return;
         }
 
-        clpImageLoading.setVisibility(View.VISIBLE);
-        Glide.with(this).load(imgLink).asBitmap().diskCacheStrategy(DiskCacheStrategy.NONE).dontTransform()
+        clpImageLoading.smoothToShow();
+        Glide.with(this)
+                .load(imgLink)
+                .asBitmap()
+                .animate(R.anim.preview_showing_img)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .dontTransform()
                 .listener(new RequestListener<String, Bitmap>() {
                     @Override
                     public boolean onException(Exception e, String model, Target<Bitmap> target,
@@ -230,7 +242,7 @@ public class PreviewActivity extends BaseActivity implements HasComponent<Previe
                         if (e != null) {
                             e.printStackTrace();
                         }
-                        clpImageLoading.setVisibility(View.GONE);
+                        clpImageLoading.smoothToHide();
                         return false;
                     }
 
@@ -238,11 +250,13 @@ public class PreviewActivity extends BaseActivity implements HasComponent<Previe
                     public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target,
                                                    boolean isFromMemoryCache, boolean isFirstResource) {
                         preImage.setVisibility(View.VISIBLE);
-                        clpImageLoading.setVisibility(View.GONE);
+                        clpImageLoading.smoothToHide();
                         mHandler.sendEmptyMessage(0);
                         return false;
                     }
-                }).skipMemoryCache(true).into(preImage);
+                })
+                .skipMemoryCache(true)
+                .into(preImage);
     }
 
 
@@ -301,7 +315,7 @@ public class PreviewActivity extends BaseActivity implements HasComponent<Previe
 
     @Override
     protected void injectDependencies() {
-        component = PreviewComponent.Initializer.init(DPWallz.get(this).getAppComponent(), this);
+        component = PreviewComponent.Initializer.init(App.get(this).getAppComponent(), this);
         component.inject(this);
     }
 
@@ -325,7 +339,7 @@ public class PreviewActivity extends BaseActivity implements HasComponent<Previe
     }
 
     //    @Override
-    //    protected void injectDependencies(DPWallz application, AppComponent component) {
+    //    protected void injectDependencies(App application, AppComponent component) {
     //        component.inject(this);
     //    }
 }

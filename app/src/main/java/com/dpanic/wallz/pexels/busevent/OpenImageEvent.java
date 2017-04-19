@@ -4,7 +4,7 @@ import com.dpanic.wallz.pexels.data.model.Image;
 
 /**
  * Created by dpanic on 9/30/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class OpenImageEvent {

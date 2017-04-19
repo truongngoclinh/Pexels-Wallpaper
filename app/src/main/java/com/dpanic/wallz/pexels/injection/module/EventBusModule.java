@@ -7,7 +7,7 @@ import dagger.Provides;
 
 /**
  * Created by dpanic on 1/9/2017.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 @Module

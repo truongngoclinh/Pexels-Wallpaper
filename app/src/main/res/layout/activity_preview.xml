@@ -88,12 +88,23 @@
             android:contentDescription="@string/string_no_internet_connection"/>
     </RelativeLayout>
 
-    <android.support.v4.widget.ContentLoadingProgressBar
+    <!--<android.support.v4.widget.ContentLoadingProgressBar-->
+        <!--android:id="@+id/preview_loading_progress"-->
+        <!--style="?android:attr/progressBarStyleLarge"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"/>-->
+
+    <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/preview_loading_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        style="@style/AVLoadingIndicatorView.Small"
+        android:layout_marginBottom="20dp"
+        app:indicatorName="LineScalePulseOutRapidIndicator"
+        />
 
 
     <android.support.v7.widget.Toolbar

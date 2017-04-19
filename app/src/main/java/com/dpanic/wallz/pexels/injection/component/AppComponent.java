@@ -2,7 +2,7 @@ package com.dpanic.wallz.pexels.injection.component;
 
 import org.greenrobot.eventbus.EventBus;
 import android.app.Application;
-import com.dpanic.wallz.pexels.application.DPWallz;
+import com.dpanic.wallz.pexels.application.App;
 import com.dpanic.wallz.pexels.injection.scope.ApplicationScope;
 import com.dpanic.wallz.pexels.injection.module.AppModule;
 import com.dpanic.wallz.pexels.injection.module.EventBusModule;
@@ -15,7 +15,7 @@ import dagger.Component;
 
 /**
  * Created by dpanic on 1/9/2017.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 @ApplicationScope
@@ -28,7 +28,7 @@ import dagger.Component;
 public interface AppComponent {
 
     final class Initializer{
-        public static AppComponent init(DPWallz app) {
+        public static AppComponent init(App app) {
             return DaggerAppComponent.builder()
                     .appModule(new AppModule(app))
                     .build();

@@ -16,15 +16,15 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * Created by dpanic on 10/6/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
-public class DPWallz extends Application {
+public class App extends Application {
 
     private AppComponent mAppComponent;
 
-    public static DPWallz get(Activity activity) {
-        return (DPWallz) activity.getApplication();
+    public static App get(Activity activity) {
+        return (App) activity.getApplication();
     }
 
 
@@ -41,7 +41,7 @@ public class DPWallz extends Application {
 
             initTimber();
 
-            initLeakCanary();
+//            initLeakCanary();
         }
     }
 

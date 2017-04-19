@@ -11,7 +11,7 @@ import com.dpanic.wallz.pexels.utils.Constants;
 
 /**
  * Created by dpanic on 29/09/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 class ExploreFragmentAdapter extends FragmentPagerAdapter {

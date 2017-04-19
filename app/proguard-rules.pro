@@ -38,8 +38,6 @@
 -keep class * extends android.support.design.widget.CoordinatorLayout.Behavior { *; }
 -keep class * extends android.support.design.widget.ViewOffsetBehavior { *; }
 -keep class * extends android.support.design.widget.AppBarLayout.ScrollingViewBehavior { *; }
-#-keep class com.dpanic.dpwallz.util.ConstrainedScrollBehavior
-#-keepclassmembers class com.dpanic.dpwallz.util.ConstrainedScrollBehavior
 
 -keepclassmembers class * implements android.os.Parcelable {
    public static final android.os.Parcelable$Creator *;

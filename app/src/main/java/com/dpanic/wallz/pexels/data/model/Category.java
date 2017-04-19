@@ -15,7 +15,7 @@ import timber.log.Timber;
 
 /**
  * Created by dpanic on 9/29/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 @StorIOSQLiteType(table = Category.TABLE_NAME)

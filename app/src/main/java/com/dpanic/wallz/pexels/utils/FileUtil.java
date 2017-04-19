@@ -9,7 +9,7 @@ import timber.log.Timber;
 
 /**
  * Created by dpanic on 10/11/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class FileUtil {
@@ -17,7 +17,7 @@ public class FileUtil {
 
     private static String getDownloadFolder() {
         String root = Environment.getExternalStorageDirectory().toString();
-        File appFolder = new File(root + "/DPWallz");
+        File appFolder = new File(root + "/" + "Pexels");
         if (!appFolder.exists()) {
             if (!appFolder.mkdir()) {
                 Timber.e("getDownloadFolder: cannot create app folder!");
@@ -25,7 +25,7 @@ public class FileUtil {
             }
         }
 
-        return root + "/DPWallz/";
+        return root + "/Pexels/";
     }
 
     public static boolean isFileExists(String path) {

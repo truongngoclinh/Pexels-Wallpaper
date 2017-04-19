@@ -28,7 +28,7 @@ import timber.log.Timber;
 
 /**
  * Created by dpanic on 10/6/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class HTMLParsingUtil {

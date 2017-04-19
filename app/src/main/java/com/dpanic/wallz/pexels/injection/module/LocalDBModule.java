@@ -26,7 +26,7 @@ import timber.log.Timber;
 
 /**
  * Created by dpanic on 2/27/2017.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 @Module

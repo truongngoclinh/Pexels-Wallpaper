@@ -6,7 +6,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 /**
  * Created by dpanic on 10/28/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class MyFirebaseInstanceIdService extends FirebaseInstanceIdService {

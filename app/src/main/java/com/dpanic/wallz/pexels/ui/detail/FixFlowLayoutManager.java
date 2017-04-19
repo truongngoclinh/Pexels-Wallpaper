@@ -4,7 +4,7 @@ import com.xiaofeng.flowlayoutmanager.FlowLayoutManager;
 
 /**
  * Created by dpanic on 10/7/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 class FixFlowLayoutManager extends FlowLayoutManager {

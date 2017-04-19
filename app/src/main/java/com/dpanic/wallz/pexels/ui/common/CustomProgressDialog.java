@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by dpanic on 11/8/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class CustomProgressDialog {

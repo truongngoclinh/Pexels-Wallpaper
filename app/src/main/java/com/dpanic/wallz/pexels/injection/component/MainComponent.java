@@ -15,7 +15,7 @@ import dagger.Component;
 
 /**
  * Created by dpanic on 3/3/2017.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 @Component(dependencies = AppComponent.class,

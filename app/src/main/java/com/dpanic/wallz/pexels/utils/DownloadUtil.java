@@ -17,6 +17,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import com.dpanic.wallz.pexels.R;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -30,7 +31,7 @@ import timber.log.Timber;
 
 /**
  * Created by dpanic on 11/2/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class DownloadUtil {
@@ -55,8 +56,8 @@ public class DownloadUtil {
     }
 
     @NonNull
-    public static Observable<Integer> downloadImageFromUrl(Context context, final String url, boolean
-            isForNotification) {
+    public static Observable<Integer> downloadImageFromUrl(Context context, final String url,
+                                                           boolean isForNotification) {
         final InputStream[] input = { null };
         final OutputStream[] output = { null };
         final Response[] response = new Response[1];
@@ -202,13 +203,14 @@ public class DownloadUtil {
         DownloadManager.Request request = new DownloadManager.Request(uri);
 
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-        request.setTitle("DPWallz");
-        request.setDescription("Downloading image ...");
+        request.setTitle(context.getString(R.string.app_name));
+        request.setDescription(context.getString(R.string.string_downloading_image));
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
         if (isForNotification) {
-            request.setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, FileUtil.getFileName(url));
+            request.setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS,
+                                                     FileUtil.getFileName(url));
         } else {
-            request.setDestinationInExternalPublicDir("DPWallz", FileUtil.getFileName(url));
+            request.setDestinationInExternalPublicDir(context.getString(R.string.app_name), FileUtil.getFileName(url));
         }
         request.allowScanningByMediaScanner();
 
@@ -228,7 +230,8 @@ public class DownloadUtil {
                     while (downloading) {
 
                         DownloadManager.Query q = new DownloadManager.Query();
-                        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                        DownloadManager downloadManager =
+                                (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
                         q.setFilterById(id);
 
                         Cursor cursor = downloadManager.query(q);
@@ -237,7 +240,6 @@ public class DownloadUtil {
                         int bytes_downloaded =
                                 cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
                         int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
-
 
 
                         if (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)) ==

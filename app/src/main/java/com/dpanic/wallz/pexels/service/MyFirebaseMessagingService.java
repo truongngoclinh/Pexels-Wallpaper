@@ -36,7 +36,7 @@ import timber.log.Timber;
 
 /**
  * Created by dpanic on 10/28/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {

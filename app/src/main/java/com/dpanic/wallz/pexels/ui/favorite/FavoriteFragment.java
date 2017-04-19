@@ -34,7 +34,7 @@ import timber.log.Timber;
 
 /**
  * Created by dpanic on 10/14/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class FavoriteFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -289,7 +289,7 @@ public class FavoriteFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
 //    @Override
-//    protected void injectDependencies(DPWallz application, AppComponent component) {
+//    protected void injectDependencies(App application, AppComponent component) {
 //        component.inject(this);
 //    }
 }

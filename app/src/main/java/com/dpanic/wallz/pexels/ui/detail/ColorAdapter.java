@@ -23,7 +23,7 @@ import butterknife.OnClick;
 
 /**
  * Created by dpanic on 10/7/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ColorVH> {

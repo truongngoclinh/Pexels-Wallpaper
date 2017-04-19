@@ -2,7 +2,7 @@ package com.dpanic.wallz.pexels.utils;
 
 /**
  * Created by dpanic on 12/10/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class TextUtil {

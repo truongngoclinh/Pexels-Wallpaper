@@ -38,7 +38,7 @@ import timber.log.Timber;
 
 /**
  * Created by dpanic on 29/09/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{

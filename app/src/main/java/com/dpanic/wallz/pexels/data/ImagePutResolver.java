@@ -9,7 +9,7 @@ import com.pushtorefresh.storio.sqlite.queries.UpdateQuery;
 
 /**
  * Created by dpanic on 3/10/2017.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class ImagePutResolver extends DefaultPutResolver<Image> {

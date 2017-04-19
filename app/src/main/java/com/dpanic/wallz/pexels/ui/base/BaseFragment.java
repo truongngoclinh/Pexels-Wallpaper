@@ -8,7 +8,7 @@ import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by dpanic on 12/29/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public abstract class BaseFragment extends Fragment {

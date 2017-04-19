@@ -30,7 +30,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.dpanic.wallz.pexels.R;
-import com.dpanic.wallz.pexels.application.DPWallz;
+import com.dpanic.wallz.pexels.application.App;
 import com.dpanic.wallz.pexels.busevent.DownloadEvent;
 import com.dpanic.wallz.pexels.busevent.OpenCategoryEvent;
 import com.dpanic.wallz.pexels.busevent.ProgressDialogEvent;
@@ -253,7 +253,7 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
                 }
                 break;
             case ProgressDialogEvent.UPDATE_EVENT:
-                Timber.w("UPDATE_EVENT");
+                Timber.w("UPDATE_EVENT " + event.getProgress());
                 progressDialog.setProgress(event.getProgress());
                 break;
             case ProgressDialogEvent.DISMISS_EVENT:
@@ -323,11 +323,6 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
 
         boolean isNetworkAvailable = DownloadUtil.checkNetworkStatus(mContext.getApplicationContext());
 
-//        AdRequest mNativeAdRequest = new AdRequest.Builder().build();
-//        adView = new NativeExpressAdView(mContext.getApplicationContext());
-//        String native_ads_id = getResources().getString(R.string.string_detail_native_ad_id);
-//        adView.setAdUnitId(native_ads_id);
-//        adView.setAdSize(new AdSize(360, 100));
         adView.setAdUnitId(getString(R.string.string_detail_native_ad_id));
         adView.setAdListener(new AdListener() {
             @Override
@@ -339,12 +334,6 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
             }
         });
         adView.loadAd(mNativeAdRequest);
-//        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-//                                                                             ViewGroup.LayoutParams.WRAP_CONTENT);
-//        params.setMargins(0, (int) getResources().getDimension(R.dimen.ad_vertical_margin), 0,
-//                          (int) getResources().getDimension(R.dimen.ad_vertical_margin));
-//        params.addRule(RelativeLayout.CENTER_HORIZONTAL);
-//        adView.setLayoutParams(params);
 
         if (isNetworkAvailable && isShowAds) {
 //            layoutAd.setVisibility(View.VISIBLE);
@@ -614,7 +603,7 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
 
     @Override
     protected void injectDependencies() {
-        component = DetailComponent.Initializer.init(DPWallz.get(this).getAppComponent(), this);
+        component = DetailComponent.Initializer.init(App.get(this).getAppComponent(), this);
         component.inject(this);
     }
 

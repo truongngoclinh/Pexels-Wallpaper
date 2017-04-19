@@ -4,7 +4,7 @@ import android.database.Cursor;
 
 /**
  * Created by dpanic on 9/29/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public final class DB {

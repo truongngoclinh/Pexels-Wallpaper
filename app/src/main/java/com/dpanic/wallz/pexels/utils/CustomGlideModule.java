@@ -12,7 +12,7 @@ import timber.log.Timber;
 
 /**
  * Created by dpanic on 10/14/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class CustomGlideModule implements GlideModule {

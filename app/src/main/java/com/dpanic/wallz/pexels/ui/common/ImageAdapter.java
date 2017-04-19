@@ -1,10 +1,11 @@
 package com.dpanic.wallz.pexels.ui.common;
 
+import java.util.ArrayList;
+import org.greenrobot.eventbus.EventBus;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestListener;
@@ -21,22 +21,16 @@ import com.dpanic.wallz.pexels.R;
 import com.dpanic.wallz.pexels.busevent.OpenImageEvent;
 import com.dpanic.wallz.pexels.data.model.Image;
 import com.dpanic.wallz.pexels.utils.Constants;
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.wang.avi.AVLoadingIndicatorView;
-
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by dpanic on 9/29/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

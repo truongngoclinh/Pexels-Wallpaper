@@ -24,7 +24,7 @@ import butterknife.OnClick;
 
 /**
  * Created by dpanic on 10/12/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryVH> {

@@ -15,7 +15,7 @@ import rx.schedulers.Schedulers;
 
 /**
  * Created by dpanic on 3/7/2017.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class StorIODBManager {

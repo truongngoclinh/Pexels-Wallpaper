@@ -2,7 +2,7 @@ package com.dpanic.wallz.pexels.utils;
 
 /**
  * Created by dpanic on 9/30/2016.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 public class Constants {

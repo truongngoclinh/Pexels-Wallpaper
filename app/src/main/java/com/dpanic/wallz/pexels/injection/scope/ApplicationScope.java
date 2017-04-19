@@ -6,7 +6,7 @@ import javax.inject.Scope;
 
 /**
  * Created by dpanic on 2/27/2017.
- * Project: DPWallz
+ * Project: Pexels
  */
 
 @Scope
