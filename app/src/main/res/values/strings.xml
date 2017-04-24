@@ -52,4 +52,9 @@
     <string name="string_cancel">Cancel</string>
     <string name="app_name_debug">PexelsDebug</string>
     <string name="string_downloading_image">Downloading image ...</string>
+    <string name="string_update_available">Update available</string>
+    <string name="string_new_app_version">A new version of Pexels is available. Do you want to update?</string>
+    <string name="string_later">Later</string>
+    <string name="string_update">Update</string>
+    <string name="string_no_play_store">No Play Store installed on device</string>
 </resources>

@@ -28,8 +28,9 @@ ext.versions = [
         circleImageView       : '1.3.0',
         storio                : '1.12.3',
         calligraphy           : '2.2.0',
-        avLoadingIndicatorView: '2.1.3'
-
+        avLoadingIndicatorView: '2.1.3',
+        materialDialog        : '0.9.4.2',
+        branchio              : '2.6.1'
 ]
 
 ext.libraries = [
@@ -70,6 +71,7 @@ ext.libraries = [
         storioAnnotation         : "com.pushtorefresh.storio:sqlite-annotations:$versions.storio",
         storioAnnotationProcessor: "com.pushtorefresh.storio:sqlite-annotations-processor:$versions.storio",
         calligraphy              : "uk.co.chrisjenx:calligraphy:$versions.calligraphy",
-        avLoadingIndicatorView   : "com.wang.avi:library:$versions.avLoadingIndicatorView"
-
+        avLoadingIndicatorView   : "com.wang.avi:library:$versions.avLoadingIndicatorView",
+        materialDialog           : "com.afollestad.material-dialogs:core:$versions.materialDialog",
+        branchio                 : "io.branch.sdk.android:library:$versions.branchio"
 ]

@@ -52,18 +52,18 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:250439161697:android:21fa73be934b2a99",
+        "mobilesdk_app_id": "1:250439161697:android:594932dbe6fb65a7",
         "android_client_info": {
-          "package_name": "com.dpanic.wallz.pexels"
+          "package_name": "dpanic.freestock.pexels.wallpaper"
         }
       },
       "oauth_client": [
         {
-          "client_id": "250439161697-j4o3db65m5tl1p36u33vnafq27e6vp4o.apps.googleusercontent.com",
+          "client_id": "250439161697-f0h3gj1mo22e9h67hsb9f9n2lfi0p0ef.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.dpanic.wallz.pexels",
-            "certificate_hash": "fecfbf97bf6172ffb2388c341f09d9c97d4d2444"
+            "package_name": "dpanic.freestock.pexels.wallpaper",
+            "certificate_hash": "103730ecab3d2f37fb11ac1c5057f5851424aa0b"
           }
         },
         {

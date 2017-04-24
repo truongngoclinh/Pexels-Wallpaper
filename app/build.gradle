@@ -9,9 +9,9 @@ repositories {
 android {
     signingConfigs {
         config {
-            keyAlias 'android'
+            keyAlias 'pexels'
             keyPassword 'th@nh280490'
-            storeFile file('pexelswallz.jks')
+            storeFile file('pexels.jks')
             storePassword 'th@nh280490'
         }
     }
@@ -20,7 +20,7 @@ android {
     buildToolsVersion versions.buildTools
 
     defaultConfig {
-        applicationId "com.dpanic.wallz.pexels"
+        applicationId "dpanic.freestock.pexels.wallpaper"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
         versionCode versions.code
@@ -79,6 +79,8 @@ dependencies {
     compile libraries.calligraphy
     compile libraries.circleImageView
     compile libraries.avLoadingIndicatorView
+    compile libraries.materialDialog
+    compile libraries.branchio
 
     compile libraries.storio
     compile libraries.storioAnnotation
