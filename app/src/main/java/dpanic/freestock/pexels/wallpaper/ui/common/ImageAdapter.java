@@ -1,7 +1,5 @@
 package dpanic.freestock.pexels.wallpaper.ui.common;
 
-import java.util.ArrayList;
-import org.greenrobot.eventbus.EventBus;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -13,20 +11,27 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.dpanic.wallz.pexels.R;
-import dpanic.freestock.pexels.wallpaper.data.model.Image;
-import dpanic.freestock.pexels.wallpaper.busevent.OpenImageEvent;
-import dpanic.freestock.pexels.wallpaper.utils.Constants;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.wang.avi.AVLoadingIndicatorView;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dpanic.freestock.pexels.wallpaper.busevent.OpenImageEvent;
+import dpanic.freestock.pexels.wallpaper.data.model.Image;
+import dpanic.freestock.pexels.wallpaper.utils.Constants;
 
 /**
  * Created by dpanic on 9/29/2016.
@@ -44,6 +49,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private final NativeExpressAdView mAdView;
 
     private int fragmentType = 0;
+    private boolean isAdLoaded = false;
 
     public ImageAdapter(Context context, AdRequest adRequest, NativeExpressAdView adView) {
         mContext = context;
@@ -54,6 +60,12 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         this.mAdView.post(new Runnable() {
             @Override
             public void run() {
+                mAdView.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdLoaded() {
+                        isAdLoaded = true;
+                    }
+                });
                 mAdView.loadAd(mNativeAdRequest);
             }
         });
@@ -115,6 +127,10 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         } else if (holder instanceof LoadMoreVH) {
             ((LoadMoreVH) holder).loadingProgressBar.smoothToShow();
         } else if (holder instanceof AdVH) {
+            if (isAdLoaded) {
+                ((AdVH) holder).layoutAdContainer.setVisibility(View.VISIBLE);
+            }
+
             ViewGroup parent = (ViewGroup) mAdView.getParent();
             if (parent != null) {
                 parent.removeView(mAdView);
