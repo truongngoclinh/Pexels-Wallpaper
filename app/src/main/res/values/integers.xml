@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="auto_deep_link_request_code">1001</integer>
+</resources>

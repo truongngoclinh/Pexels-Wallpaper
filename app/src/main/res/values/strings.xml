@@ -57,4 +57,7 @@
     <string name="string_later">Later</string>
     <string name="string_update">Update</string>
     <string name="string_no_play_store">No Play Store installed on device</string>
+    <string name="string_image_share">Image share</string>
+    <string name="string_image">Image</string>
+    <string name="string_app_link">App link</string>
 </resources>

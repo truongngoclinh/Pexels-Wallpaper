@@ -14,9 +14,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -27,31 +29,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.dpanic.wallz.pexels.R;
-import dpanic.freestock.pexels.wallpaper.application.App;
-import dpanic.freestock.pexels.wallpaper.busevent.DownloadEvent;
-import dpanic.freestock.pexels.wallpaper.busevent.OpenCategoryEvent;
-import dpanic.freestock.pexels.wallpaper.data.StorIODBManager;
-import dpanic.freestock.pexels.wallpaper.data.model.Category;
-import dpanic.freestock.pexels.wallpaper.data.model.Image;
-import dpanic.freestock.pexels.wallpaper.data.model.ImageDetail;
-import dpanic.freestock.pexels.wallpaper.injection.HasComponent;
-import dpanic.freestock.pexels.wallpaper.injection.component.DetailComponent;
-import dpanic.freestock.pexels.wallpaper.ui.base.BaseActivity;
-import dpanic.freestock.pexels.wallpaper.ui.common.CustomProgressDialog;
-import dpanic.freestock.pexels.wallpaper.ui.common.ImageActionHelper;
-import dpanic.freestock.pexels.wallpaper.ui.main.MainActivity;
-import dpanic.freestock.pexels.wallpaper.ui.search.SearchActivity;
-import dpanic.freestock.pexels.wallpaper.utils.DownloadUtil;
-import dpanic.freestock.pexels.wallpaper.utils.FileUtil;
-import dpanic.freestock.pexels.wallpaper.utils.HTMLParsingUtil;
-import dpanic.freestock.pexels.wallpaper.busevent.ProgressDialogEvent;
-import dpanic.freestock.pexels.wallpaper.ui.preview.PreviewActivity;
-import dpanic.freestock.pexels.wallpaper.utils.Constants;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.NativeExpressAdView;
@@ -61,6 +44,8 @@ import com.xiaofeng.flowlayoutmanager.Alignment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.net.SocketTimeoutException;
@@ -73,6 +58,31 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import dpanic.freestock.pexels.wallpaper.application.App;
+import dpanic.freestock.pexels.wallpaper.busevent.DownloadEvent;
+import dpanic.freestock.pexels.wallpaper.busevent.OpenCategoryEvent;
+import dpanic.freestock.pexels.wallpaper.busevent.ProgressDialogEvent;
+import dpanic.freestock.pexels.wallpaper.data.StorIODBManager;
+import dpanic.freestock.pexels.wallpaper.data.model.Category;
+import dpanic.freestock.pexels.wallpaper.data.model.Image;
+import dpanic.freestock.pexels.wallpaper.data.model.ImageDetail;
+import dpanic.freestock.pexels.wallpaper.injection.HasComponent;
+import dpanic.freestock.pexels.wallpaper.injection.component.DetailComponent;
+import dpanic.freestock.pexels.wallpaper.ui.base.BaseActivity;
+import dpanic.freestock.pexels.wallpaper.ui.common.CustomProgressDialog;
+import dpanic.freestock.pexels.wallpaper.ui.common.ImageActionHelper;
+import dpanic.freestock.pexels.wallpaper.ui.main.MainActivity;
+import dpanic.freestock.pexels.wallpaper.ui.preview.PreviewActivity;
+import dpanic.freestock.pexels.wallpaper.ui.search.SearchActivity;
+import dpanic.freestock.pexels.wallpaper.utils.Constants;
+import dpanic.freestock.pexels.wallpaper.utils.DownloadUtil;
+import dpanic.freestock.pexels.wallpaper.utils.FileUtil;
+import dpanic.freestock.pexels.wallpaper.utils.HTMLParsingUtil;
+import io.branch.indexing.BranchUniversalObject;
+import io.branch.referral.Branch;
+import io.branch.referral.SharingHelper;
+import io.branch.referral.util.LinkProperties;
+import io.branch.referral.util.ShareSheetStyle;
 import rx.Observer;
 import rx.functions.Action1;
 import timber.log.Timber;
@@ -232,13 +242,34 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         isShowAds = preferences.getBoolean(Constants.IS_SHOW_ADS, false);
 
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        image = bundle.getParcelable(Constants.IMAGE_INSTANCE);
+//        Intent intent = getIntent();
+//        Bundle bundle = intent.getExtras();
 
-        if (image != null) {
-            Timber.e("Title = " + image.getName());
-            Timber.e("detail = " + image.getDetailLink());
+        init();
+    }
+
+    private void init() {
+        if (Branch.isAutoDeepLinkLaunch(this)) {
+
+            Timber.e("deeep linkkkkkkkks");
+            try {
+                JSONObject object = Branch.getInstance().getLatestReferringParams();
+                String pexels_id = object.getString("pexels_id");
+                String name = object.getString("name");
+                String localLink = object.getString("localLink");
+                String largeLink = object.getString("largeLink");
+                String originalLink = object.getString("orgLink");
+                String detailLink = object.getString("detailLink");
+
+                image = new Image(pexels_id, name, originalLink, largeLink, detailLink, "", false);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Timber.e("elseeeeeeeee");
+            Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
+            image = bundle.getParcelable(Constants.IMAGE_INSTANCE);
         }
 
         loadBackdropImage(image);
@@ -453,12 +484,116 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
         }
     }
 
+    @SuppressWarnings("unused")
     @OnClick(R.id.btn_share)
     void shareAction() {
-        if (!performingAction) {
-            performingAction = true;
-            actionHelper.shareAction();
+//        if (!performingAction) {
+//            performingAction = true;
+//            actionHelper.shareAction();
+//        }
+        final MaterialDialog dialog = new MaterialDialog
+                .Builder(this)
+                .customView(R.layout.share_option_layout, false)
+                .canceledOnTouchOutside(true)
+                .build();
+        View dialogView = dialog.getCustomView();
+        if (dialogView != null) {
+            LinearLayout ctnShareImage = (LinearLayout) dialogView.findViewById(R.id.ctn_image_share);
+            LinearLayout ctnAppLink = (LinearLayout) dialogView.findViewById(R.id.ctn_app_link_share);
+
+            ctnShareImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+
+                    if (!performingAction) {
+                        performingAction = true;
+                        actionHelper.shareAction();
+                    }
+                }
+            });
+
+            ctnAppLink.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    generateShortUrl();
+                }
+            });
         }
+
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.getAttributes().windowAnimations = R.style.ShareDialogAnimation;
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            window.setGravity(Gravity.BOTTOM);
+        }
+        dialog.show();
+    }
+
+    private void generateShortUrl() {
+        BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
+                // The identifier is what Branch will use to de-dupe the content across many different Universal Objects
+                .setCanonicalIdentifier("pexels_id/" + image.getPexelId())
+                // This is where you define the open graph structure and how the object will appear on Facebook or in a deepview
+                .setTitle("Share photo").setContentDescription("Check out this amazing photo")
+                .setContentImageUrl(image.getLargeLink())
+                // You use this to specify whether this content can be discovered publicly - default is public
+                .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                // Here is where you can add custom keys/values to the deep link data
+                .addContentMetadata("pexels_id", image.getPexelId())
+                .addContentMetadata("name", image.getName())
+                .addContentMetadata("detailLink", image.getDetailLink())
+                .addContentMetadata("largeLink", image.getLargeLink())
+                .addContentMetadata("localLink", image.getLocalLink())
+                .addContentMetadata("orgLink", image.getOriginalLink());
+
+        String storeLink = "https://play.google.com/store/apps/details?id=" + getPackageName();
+        LinkProperties linkProperties = new LinkProperties()
+                .addTag("image_detail")
+                .setChannel("facebook")
+                .setFeature("sharing")
+                .setStage("1")
+                .addControlParameter("$desktop_url", storeLink)
+                .addControlParameter("$android_deeplink_path", "detail/image/");
+
+//        branchUniversalObject.generateShortUrl(DetailActivity.this, linkProperties, new Branch.BranchLinkCreateListener() {
+//            @Override
+//            public void onLinkCreate(String url, BranchError error) {
+//                if (error == null) {
+//                    Timber.e("url = " + url);
+//                    shareBranchUrl(url);
+//                } else {
+//                    Timber.e("error", error.toString());
+//                }
+//            }
+//        });
+
+        String monsterName = branchUniversalObject.getTitle();
+        String shareTitle = "Sharing photo";
+        String shareMessage = "Check out this amazing photo";
+        String copyUrlMessage = "Save " + monsterName + " url";
+        String copiedUrlMessage = "Added " + monsterName + " url to clipboard";
+
+        ShareSheetStyle shareSheetStyle = new ShareSheetStyle(DetailActivity.this, shareTitle, shareMessage)
+                .setCopyUrlStyle(getResources().getDrawable(android.R.drawable.ic_menu_send), copyUrlMessage, copiedUrlMessage)
+                .setMoreOptionStyle(getResources().getDrawable(android.R.drawable.ic_menu_search), "More options")
+                .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
+                .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK_MESSENGER)
+                .addPreferredSharingOption(SharingHelper.SHARE_WITH.PINTEREST)
+                .addPreferredSharingOption(SharingHelper.SHARE_WITH.MESSAGE)
+                .addPreferredSharingOption(SharingHelper.SHARE_WITH.TWITTER);
+
+        branchUniversalObject.showShareSheet(DetailActivity.this, linkProperties, shareSheetStyle, null);
+    }
+
+    private void shareBranchUrl(String url) {
+        Intent i = new Intent(Intent.ACTION_SEND);
+        String shareText = "Check out this amazing photo \n" + url;
+
+        i.putExtra(Intent.EXTRA_TEXT, shareText);
+        i.setType("text/plain");
+        startActivity(Intent.createChooser(i, getResources().getText(R.string.string_share)));
     }
 
     @SuppressWarnings("unused")
@@ -619,6 +754,13 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             actionHelper.resumeInvokedAction();
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        init();
     }
 
     @Override

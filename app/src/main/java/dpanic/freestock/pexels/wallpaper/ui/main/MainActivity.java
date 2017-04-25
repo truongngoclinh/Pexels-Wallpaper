@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONObject;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -28,6 +29,9 @@ import com.dpanic.wallz.pexels.BuildConfig;
 import com.dpanic.wallz.pexels.R;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.HashMap;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dpanic.freestock.pexels.wallpaper.busevent.OpenCategoryEvent;
@@ -44,8 +48,10 @@ import dpanic.freestock.pexels.wallpaper.ui.search.SearchActivity;
 import dpanic.freestock.pexels.wallpaper.utils.Constants;
 import dpanic.freestock.pexels.wallpaper.utils.HTMLParsingUtil;
 import dpanic.freestock.pexels.wallpaper.utils.TextUtil;
+import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
+import io.branch.referral.util.LinkProperties;
 import rx.Observer;
 import timber.log.Timber;
 
@@ -87,18 +93,34 @@ public class MainActivity extends BaseActivity
 
 //    @Override
 //    public void onStart() {
+//        Timber.e("onStart");
 //        super.onStart();
-//        Branch branch = Branch.getInstance();
-//
-//        branch.initSession(new Branch.BranchReferralInitListener(){
+//        Branch.getInstance().initSession(new Branch.BranchUniversalReferralInitListener() {
 //            @Override
-//            public void onInitFinished(JSONObject referringParams, BranchError error) {
-//                if (error == null) {
-//                    // params are the deep linked params associated with the link that the user clicked -> was re-directed to this app
-//                    // params will be empty if no data found
-//                    // ... insert custom logic here ...
-//                } else {
-//                    Timber.i("MyApp", error.getMessage());
+//            public void onInitFinished(BranchUniversalObject branchUniversalObject, LinkProperties linkProperties, BranchError branchError) {
+//                //If not Launched by clicking Branch link
+//                /* In case the clicked link has $android_deeplink_path the Branch will launch the MonsterViewer automatically since AutoDeeplinking feature is enabled.
+//                 * Launch Monster viewer activity if a link clicked without $android_deeplink_path
+//                 */
+//                Timber.e("onInitFinished");
+//                if (branchError == null && branchUniversalObject != null) {
+//                    if (branchUniversalObject.getMetadata().containsKey("$android_deeplink_path")) {
+//
+//                        JSONObject object = Branch.getInstance().getLatestReferringParams();
+//                        HashMap<String, String> metadata = branchUniversalObject.getMetadata();
+//                        String pexels_id = metadata.get("pexels_id");
+//                        String name = metadata.get("name");
+//                        String localLink = metadata.get("localLink");
+//                        String largeLink = metadata.get("largeLink");
+//                        String originalLink = metadata.get("orgLink");
+//                        String detailLink = metadata.get("detailLink");
+//
+//                        Image image = new Image(pexels_id, name, originalLink, largeLink, detailLink, "", false);
+//                        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+//                        intent.putExtra(Constants.IMAGE_INSTANCE, image);
+//                        startActivity(intent);
+////                        finish();
+//                    }
 //                }
 //            }
 //        }, this.getIntent().getData(), this);
