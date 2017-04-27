@@ -67,6 +67,10 @@ public class CustomProgressDialog {
 //        downloadView.showDownloadError();
 //    }
 
+    public void reset() {
+        downloadView.reset();
+    }
+
     public void setOnCancelListener(DialogInterface.OnCancelListener listener) {
         mProgressDialog.setOnCancelListener(listener);
     }

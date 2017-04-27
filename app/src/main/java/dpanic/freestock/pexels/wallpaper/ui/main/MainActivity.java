@@ -1,10 +1,10 @@
 package dpanic.freestock.pexels.wallpaper.ui.main;
 
+import java.util.HashMap;
 import javax.inject.Inject;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONObject;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -29,9 +29,6 @@ import com.dpanic.wallz.pexels.BuildConfig;
 import com.dpanic.wallz.pexels.R;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.messaging.FirebaseMessaging;
-
-import java.util.HashMap;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dpanic.freestock.pexels.wallpaper.busevent.OpenCategoryEvent;
@@ -104,7 +101,7 @@ public class MainActivity extends BaseActivity
 //                 */
 //                Timber.e("onInitFinished");
 //                if (branchError == null && branchUniversalObject != null) {
-//                    if (branchUniversalObject.getMetadata().containsKey("$android_deeplink_path")) {
+//                    if (!branchUniversalObject.getMetadata().containsKey("$android_deeplink_path")) {
 //
 //                        JSONObject object = Branch.getInstance().getLatestReferringParams();
 //                        HashMap<String, String> metadata = branchUniversalObject.getMetadata();
@@ -125,6 +122,25 @@ public class MainActivity extends BaseActivity
 //            }
 //        }, this.getIntent().getData(), this);
 //    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Branch branch = Branch.getInstance();
+
+        branch.initSession(new Branch.BranchUniversalReferralInitListener() {
+            @Override
+            public void onInitFinished(BranchUniversalObject branchUniversalObject, LinkProperties linkProperties, BranchError error) {
+                if (error == null) {
+                    // params are the deep linked params associated with the link that the user clicked -> was re-directed to this app
+                    // params will be empty if no data found
+                    // ... insert custom logic here ...
+                } else {
+                    Timber.e("Pexels", error.getMessage());
+                }
+            }
+        }, this.getIntent().getData(), this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

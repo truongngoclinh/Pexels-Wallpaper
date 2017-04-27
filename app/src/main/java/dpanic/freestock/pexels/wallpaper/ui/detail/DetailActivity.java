@@ -1,16 +1,30 @@
 package dpanic.freestock.pexels.wallpaper.ui.detail;
 
+import java.lang.ref.WeakReference;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import javax.inject.Inject;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONException;
+import org.json.JSONObject;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +42,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -41,19 +54,6 @@ import com.google.android.gms.ads.NativeExpressAdView;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
 import com.wang.avi.AVLoadingIndicatorView;
 import com.xiaofeng.flowlayoutmanager.Alignment;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.lang.ref.WeakReference;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -78,11 +78,7 @@ import dpanic.freestock.pexels.wallpaper.utils.Constants;
 import dpanic.freestock.pexels.wallpaper.utils.DownloadUtil;
 import dpanic.freestock.pexels.wallpaper.utils.FileUtil;
 import dpanic.freestock.pexels.wallpaper.utils.HTMLParsingUtil;
-import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
-import io.branch.referral.SharingHelper;
-import io.branch.referral.util.LinkProperties;
-import io.branch.referral.util.ShareSheetStyle;
 import rx.Observer;
 import rx.functions.Action1;
 import timber.log.Timber;
@@ -92,6 +88,12 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
 
     @BindView(R.id.detail_toolbar)
     Toolbar toolbar;
+
+    @BindView(R.id.detail_appbar)
+    AppBarLayout appBarLayout;
+
+    @BindView(R.id.detail_collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbarLayout;
 
     @BindView(R.id.clp_backdrop_loading)
     AVLoadingIndicatorView clpBackdropLoading;
@@ -174,6 +176,9 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
     @Inject
     EventBus eventBus;
 
+    private ImageDetail imageDetail;
+    private MaterialDialog loadingDialog;
+
     private static class WeakPrefHandler extends Handler {
         private final WeakReference<DetailActivity> mActivity;
 
@@ -222,6 +227,14 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            appBarLayout.setExpanded(false);
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
@@ -250,13 +263,10 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
 
     private void init() {
         if (Branch.isAutoDeepLinkLaunch(this)) {
-
-            Timber.e("deeep linkkkkkkkks");
             try {
                 JSONObject object = Branch.getInstance().getLatestReferringParams();
                 String pexels_id = object.getString("pexels_id");
                 String name = object.getString("name");
-                String localLink = object.getString("localLink");
                 String largeLink = object.getString("largeLink");
                 String originalLink = object.getString("orgLink");
                 String detailLink = object.getString("detailLink");
@@ -266,7 +276,6 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
                 e.printStackTrace();
             }
         } else {
-            Timber.e("elseeeeeeeee");
             Intent intent = getIntent();
             Bundle bundle = intent.getExtras();
             image = bundle.getParcelable(Constants.IMAGE_INSTANCE);
@@ -335,6 +344,9 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
                 Timber.w("SHOW_EVENT");
                 if (progressDialog != null) {
                     progressDialog.setOnCancelListener(this);
+                    currentProgress = 0;
+                    loadedProgress = 0;
+                    progressDialog.reset();
                     progressDialog.show();
                 }
                 progressHandler.sendEmptyMessageDelayed(Constants.PROGRESS_UPDATE, Constants.PROGRESS_NORMAL_UPDATE_INTERVAL);
@@ -525,66 +537,71 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
         Window window = dialog.getWindow();
         if (window != null) {
             window.getAttributes().windowAnimations = R.style.ShareDialogAnimation;
-            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             window.setGravity(Gravity.BOTTOM);
         }
         dialog.show();
     }
 
     private void generateShortUrl() {
-        BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
-                // The identifier is what Branch will use to de-dupe the content across many different Universal Objects
-                .setCanonicalIdentifier("pexels_id/" + image.getPexelId())
-                // This is where you define the open graph structure and how the object will appear on Facebook or in a deepview
-                .setTitle("Share photo").setContentDescription("Check out this amazing photo")
-                .setContentImageUrl(image.getLargeLink())
-                // You use this to specify whether this content can be discovered publicly - default is public
-                .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
-                // Here is where you can add custom keys/values to the deep link data
-                .addContentMetadata("pexels_id", image.getPexelId())
-                .addContentMetadata("name", image.getName())
-                .addContentMetadata("detailLink", image.getDetailLink())
-                .addContentMetadata("largeLink", image.getLargeLink())
-                .addContentMetadata("localLink", image.getLocalLink())
-                .addContentMetadata("orgLink", image.getOriginalLink());
+        showLoadingDialog();
+        addSubscription(actionHelper.getShortUrl(imageDetail.getAuthor()).subscribe(new Observer<String>() {
+            @Override
+            public void onCompleted() {
+                hideLoadingDialog();
+            }
 
-        String storeLink = "https://play.google.com/store/apps/details?id=" + getPackageName();
-        LinkProperties linkProperties = new LinkProperties()
-                .addTag("image_detail")
-                .setChannel("facebook")
-                .setFeature("sharing")
-                .setStage("1")
-                .addControlParameter("$desktop_url", storeLink)
-                .addControlParameter("$android_deeplink_path", "detail/image/");
+            @Override
+            public void onError(Throwable e) {
+                Timber.e(e.getMessage());
+            }
 
-//        branchUniversalObject.generateShortUrl(DetailActivity.this, linkProperties, new Branch.BranchLinkCreateListener() {
-//            @Override
-//            public void onLinkCreate(String url, BranchError error) {
-//                if (error == null) {
-//                    Timber.e("url = " + url);
-//                    shareBranchUrl(url);
-//                } else {
-//                    Timber.e("error", error.toString());
-//                }
-//            }
-//        });
+            @Override
+            public void onNext(String url) {
+                shareBranchUrl(url);
+            }
+        }));
 
-        String monsterName = branchUniversalObject.getTitle();
-        String shareTitle = "Sharing photo";
-        String shareMessage = "Check out this amazing photo";
-        String copyUrlMessage = "Save " + monsterName + " url";
-        String copiedUrlMessage = "Added " + monsterName + " url to clipboard";
+//        String title = branchUniversalObject.getTitle();
+//        String shareTitle = "Sharing photo";
+//        String shareMessage = "Check out this amazing photo";
+//        String copyUrlMessage = "Save " + title + " url";
+//        String copiedUrlMessage = "Added " + title + " url to clipboard";
+//
+//        ShareSheetStyle shareSheetStyle = new ShareSheetStyle(DetailActivity.this, shareTitle, shareMessage)
+//                .setCopyUrlStyle(getResources().getDrawable(android.R.drawable.ic_menu_send), copyUrlMessage, copiedUrlMessage)
+//                .setMoreOptionStyle(getResources().getDrawable(android.R.drawable.ic_menu_search), "More options")
+//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
+//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK_MESSENGER)
+//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.PINTEREST)
+//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.MESSAGE)
+//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.TWITTER);
+//
+//        branchUniversalObject.showShareSheet(DetailActivity.this, linkProperties, shareSheetStyle, null);
+    }
 
-        ShareSheetStyle shareSheetStyle = new ShareSheetStyle(DetailActivity.this, shareTitle, shareMessage)
-                .setCopyUrlStyle(getResources().getDrawable(android.R.drawable.ic_menu_send), copyUrlMessage, copiedUrlMessage)
-                .setMoreOptionStyle(getResources().getDrawable(android.R.drawable.ic_menu_search), "More options")
-                .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
-                .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK_MESSENGER)
-                .addPreferredSharingOption(SharingHelper.SHARE_WITH.PINTEREST)
-                .addPreferredSharingOption(SharingHelper.SHARE_WITH.MESSAGE)
-                .addPreferredSharingOption(SharingHelper.SHARE_WITH.TWITTER);
+    private void showLoadingDialog() {
+        if (loadingDialog == null) {
+            loadingDialog = new MaterialDialog.Builder(this)
+                    .customView(R.layout.detail_loading_dialog_layout, false)
+                    .canceledOnTouchOutside(false)
+                    .build();
+        }
+        Window window = loadingDialog.getWindow();
+        if (window != null) {
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
 
-        branchUniversalObject.showShareSheet(DetailActivity.this, linkProperties, shareSheetStyle, null);
+        View dialogView = loadingDialog.getCustomView();
+        if (dialogView != null) {
+            AVLoadingIndicatorView livView = (AVLoadingIndicatorView) dialogView.findViewById(R.id.liv_loading);
+            livView.smoothToShow();
+        }
+        loadingDialog.show();
+    }
+
+    private void hideLoadingDialog() {
+        loadingDialog.dismiss();
     }
 
     private void shareBranchUrl(String url) {
@@ -672,6 +689,7 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
     }
 
     private void refreshData(ImageDetail imageDetail) {
+        this.imageDetail = imageDetail;
         tvAuthor.setText(String.format(getResources().getString(R.string.string_prefix_by), imageDetail.getAuthor()));
 
         Glide.with(this)

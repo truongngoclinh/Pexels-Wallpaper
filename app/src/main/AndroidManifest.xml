@@ -21,8 +21,8 @@
         android:fullBackupContent="@xml/backup_descriptor">
 
         <!-- Branch init -->
-        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_alExuEy54hxmOJGMaXD6FkhpCBkypp0q" />
-        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_ccyECuu6WdEeVNVLg3B9rlngCAbBej5Q" />
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_nbCqzzK2Hyeclxcj9bN6Rkaeqtl2n1tw" />
+        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_mlwxvFT3PvdoeujdZhZvhfaawvk2i4wQ" />
 
         <!-- Branch testing (TestMode "true" to simulate fresh installs on dev environment) -->
         <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
@@ -53,7 +53,7 @@
 
             <!-- Branch URI scheme -->
             <intent-filter>
-                <data android:scheme="pexels" android:host="open" />
+                <data android:scheme="pexels"/>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -64,7 +64,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="pexels.app.link" />
+                <data android:scheme="https" android:host="pexels-dpanic.app.link" />
             </intent-filter>
 
         </activity>
@@ -73,8 +73,7 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@style/AppTheme">
 
-            <meta-data android:name="io.branch.sdk.auto_link_keys" android:value="pexels_id" />
-            <!--<meta-data android:name="io.branch.sdk.auto_link_path" android:value="pexels_id/" />-->
+            <meta-data android:name="io.branch.sdk.auto_link_path" android:value="image/view/" />
             <meta-data android:name="io.branch.sdk.auto_link_request_code"
                        android:value="@integer/auto_deep_link_request_code" />
         </activity>
@@ -93,12 +92,6 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
-
-        <!-- Include the AdActivity configChanges and theme. -->
-        <!--<activity-->
-        <!--android:name="com.google.android.gms.ads.AdActivity"-->
-        <!--android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"-->
-        <!--android:theme="@android:style/Theme.Translucent"/>-->
 
         <service
             android:name="dpanic.freestock.pexels.wallpaper.service.MyFirebaseMessagingService"

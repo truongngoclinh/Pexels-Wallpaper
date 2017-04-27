@@ -10,11 +10,20 @@ import com.dpanic.wallz.pexels.R;
 import dpanic.freestock.pexels.wallpaper.busevent.DownloadEvent;
 import dpanic.freestock.pexels.wallpaper.busevent.ProgressDialogEvent;
 import dpanic.freestock.pexels.wallpaper.data.model.Image;
+import dpanic.freestock.pexels.wallpaper.ui.detail.DetailActivity;
 import dpanic.freestock.pexels.wallpaper.utils.Constants;
 import dpanic.freestock.pexels.wallpaper.utils.DownloadUtil;
 import dpanic.freestock.pexels.wallpaper.utils.FileUtil;
 import dpanic.freestock.pexels.wallpaper.utils.PermissionUtils;
+import io.branch.indexing.BranchUniversalObject;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
+import io.branch.referral.SharingHelper;
+import io.branch.referral.util.LinkProperties;
+import io.branch.referral.util.ShareSheetStyle;
+import rx.Observable;
 import rx.Observer;
+import rx.Subscriber;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
@@ -222,5 +231,75 @@ public class ImageActionHelper {
             shareAction();
             break;
         }
+    }
+
+    public Observable<String> getShortUrl(String author) {
+        final BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
+                // The identifier is what Branch will use to de-dupe the content across many different Universal Objects
+//                .setCanonicalIdentifier("pexels/" + img.getPexelId())
+                // This is where you define the open graph structure and how the object will appear on Facebook or in a deepview
+                .setTitle(img.getName())
+                .setContentDescription(context.getString(R.string.string_prefix_by, author))
+                .setContentImageUrl(img.getLargeLink())
+                // You use this to specify whether this content can be discovered publicly - default is public
+//                .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                // Here is where you can add custom keys/values to the deep link data
+                .addContentMetadata("pexels_id", img.getPexelId())
+                .addContentMetadata("name", img.getName())
+                .addContentMetadata("detailLink", img.getDetailLink())
+                .addContentMetadata("largeLink", img.getLargeLink())
+                .addContentMetadata("localLink", img.getLocalLink())
+                .addContentMetadata("orgLink", img.getOriginalLink());
+
+        String storeLink = "https://play.google.com/store/apps/details?id=" + context.getPackageName();
+        final LinkProperties linkProperties = new LinkProperties()
+                .addTag("image_detail")
+                .setChannel("facebook")
+                .setFeature("sharing")
+                .setStage("1")
+//                .addControlParameter("$desktop_url", storeLink)
+                .addControlParameter("$android_deeplink_path", "image/view/");
+
+        branchUniversalObject.listOnGoogleSearch(context);
+
+        return Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(final Subscriber<? super String> subscriber) {
+                branchUniversalObject.generateShortUrl(context, linkProperties, new Branch.BranchLinkCreateListener() {
+                    @Override
+                    public void onLinkCreate(String url, BranchError error) {
+                        if (error == null) {
+                            Timber.e("url = " + url);
+                            subscriber.onNext(url);
+                            subscriber.onCompleted();
+                        } else {
+                            Timber.e("error", error.toString());
+                            subscriber.onError(new Exception(error.getMessage()));
+                        }
+                    }
+                });
+            }
+        });
+
+//        String title = branchUniversalObject.getTitle();
+//        String shareTitle = "Sharing photo";
+//        String shareMessage = "Check out this amazing photo";
+//        String copyUrlMessage = "Save " + title + " url";
+//        String copiedUrlMessage = "Added " + title + " url to clipboard";
+//        branchUniversalObject.listOnGoogleSearch(context);
+//
+//        ShareSheetStyle shareSheetStyle = new ShareSheetStyle(context, shareTitle, shareMessage)
+//                .setStyleResourceID(R.style.Share_Sheet_Style)
+//                .setCopyUrlStyle(context.getResources().getDrawable(android.R.drawable.ic_menu_send), copyUrlMessage,
+//                                 copiedUrlMessage)
+//                .setMoreOptionStyle(context.getResources().getDrawable(android.R.drawable.ic_menu_search), "More " +
+//                        "options")
+//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
+//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK_MESSENGER)
+//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.PINTEREST)
+//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.MESSAGE)
+//                .addPreferredSharingOption(SharingHelper.SHARE_WITH.TWITTER);
+//
+//        branchUniversalObject.showShareSheet(((Activity) context), linkProperties, shareSheetStyle, null);
     }
 }

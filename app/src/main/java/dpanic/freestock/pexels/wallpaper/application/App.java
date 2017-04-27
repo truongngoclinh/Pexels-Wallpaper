@@ -10,10 +10,6 @@ import com.squareup.leakcanary.LeakCanary;
 import io.branch.referral.Branch;
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-//import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
-
-//import io.realm.Realm;
-//import io.realm.RealmConfiguration;
 
 /**
  * Created by dpanic on 10/6/2016.
@@ -33,6 +29,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
+        Branch.enablePlayStoreReferrer(7000L);
         Branch.getAutoInstance(this);
 
         initDependency();
@@ -68,6 +65,7 @@ public class App extends Application {
                         .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this)).build());
     }
 
+    @SuppressWarnings("unused")
     private boolean initLeakCanary() {
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.

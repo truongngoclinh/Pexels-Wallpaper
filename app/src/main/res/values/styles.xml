@@ -52,4 +52,15 @@
     <style name="PreviewActionBar" parent="Base.ThemeOverlay.AppCompat.Dark.ActionBar">
     </style>
 
+    <style name="Share_Sheet_Style" parent="android:style/Widget.ListView">
+        <item name="android:divider">@color/color_progress_circle</item>
+        <item name="android:dividerHeight">1px</item>
+        <item name="android:listSelector">@android:drawable/ic_menu_share</item>
+        <item name="android:drawSelectorOnTop">false</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="fontPath">fonts/PT_Sans-Web-Regular.ttf</item>
+    </style>
+
 </resources>

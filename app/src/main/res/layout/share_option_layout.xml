@@ -5,7 +5,7 @@
               android:baselineAligned="false"
               android:gravity="center"
               android:orientation="horizontal"
-              android:weightSum="4">
+              android:weightSum="2">
 
     <LinearLayout
         android:id="@+id/ctn_image_share"
