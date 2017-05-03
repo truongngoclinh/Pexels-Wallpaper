@@ -20,20 +20,6 @@
 -keepattributes SourceFile,LineNumberTable
 
 -keep class * implements com.bumptech.glide.module.GlideModule
-#-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
-
-#-keep class * extends android.support.design.widget.CoordinatorLayout@Behavior
-#
-#-keepclassmembers class * extends android.support.design.widget.CoordinatorLayout@Behavior {
-# public <init>(android.content.Context, android.util.AttributeSet);
-#}
-
-#-keep class * extends android.support.design.widget.AppBarLayout.ScrollingViewBehavior
-#
-#-keepclassmembers class * extends android.support.design.widget.AppBarLayout.ScrollingViewBehavior {
-# public <init>(android.content.Context, android.util.AttributeSet);
-#}
-#
 
 -keep class * extends android.support.design.widget.CoordinatorLayout.Behavior { *; }
 -keep class * extends android.support.design.widget.ViewOffsetBehavior { *; }

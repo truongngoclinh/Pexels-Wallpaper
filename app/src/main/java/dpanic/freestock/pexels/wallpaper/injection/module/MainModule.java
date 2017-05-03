@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 import dpanic.freestock.pexels.wallpaper.ui.common.ImageAdapter;
 import dpanic.freestock.pexels.wallpaper.ui.category.CategoryAdapter;
@@ -40,6 +41,7 @@ public class MainModule {
                 .title(R.string.string_update_available)
                 .content(R.string.string_new_app_version)
                 .negativeText(R.string.string_later)
+                .negativeColor(ContextCompat.getColor(context, R.color.color_primary_50))
                 .positiveText(R.string.string_update)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override

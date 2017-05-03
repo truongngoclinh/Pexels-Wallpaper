@@ -46,7 +46,6 @@ import dpanic.freestock.pexels.wallpaper.ui.common.CustomProgressDialog;
 import dpanic.freestock.pexels.wallpaper.ui.common.ImageActionHelper;
 import dpanic.freestock.pexels.wallpaper.utils.Constants;
 import dpanic.freestock.pexels.wallpaper.utils.FileUtil;
-import timber.log.Timber;
 
 public class PreviewActivity extends BaseActivity implements HasComponent<PreviewComponent>, Dialog.OnCancelListener {
 
@@ -143,9 +142,6 @@ public class PreviewActivity extends BaseActivity implements HasComponent<Previe
 
         ButterKnife.bind(this);
 
-        Timber.e("eventbus = " + eventBus);
-        Timber.e("dialog = " + progressDialog);
-
         setSupportActionBar(toolbar);
 
         actionBar = getSupportActionBar();
@@ -187,6 +183,7 @@ public class PreviewActivity extends BaseActivity implements HasComponent<Previe
             case ProgressDialogEvent.SHOW_EVENT:
                 if (progressDialog != null) {
                     progressDialog.setOnCancelListener(this);
+                    progressDialog.reset();
                     progressDialog.show();
                 }
 
@@ -196,9 +193,13 @@ public class PreviewActivity extends BaseActivity implements HasComponent<Previe
 //                progressDialog.setProgress(event.getProgress());
                 loadedProgress = event.getProgress();
                 break;
-//            case ProgressDialogEvent.DISMISS_EVENT:
-//                progressDialog.dismiss();
-//                break;
+            case ProgressDialogEvent.DISMISS_EVENT:
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                    progressDialog.showDownloadError();
+                    progressDialog.reset();
+                }
+                break;
         }
     }
 
@@ -354,13 +355,13 @@ public class PreviewActivity extends BaseActivity implements HasComponent<Previe
 
     @Override
     protected void onDestroy() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+
         if (actionHelper != null) {
             actionHelper.destruct();
             actionHelper = null;
-        }
-
-        if (progressDialog != null) {
-            progressDialog.dismiss();
         }
 
         Glide.clear(preImage);

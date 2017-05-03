@@ -10,7 +10,6 @@ import com.dpanic.wallz.pexels.R;
 import dpanic.freestock.pexels.wallpaper.busevent.DownloadEvent;
 import dpanic.freestock.pexels.wallpaper.busevent.ProgressDialogEvent;
 import dpanic.freestock.pexels.wallpaper.data.model.Image;
-import dpanic.freestock.pexels.wallpaper.ui.detail.DetailActivity;
 import dpanic.freestock.pexels.wallpaper.utils.Constants;
 import dpanic.freestock.pexels.wallpaper.utils.DownloadUtil;
 import dpanic.freestock.pexels.wallpaper.utils.FileUtil;
@@ -18,12 +17,11 @@ import dpanic.freestock.pexels.wallpaper.utils.PermissionUtils;
 import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
-import io.branch.referral.SharingHelper;
 import io.branch.referral.util.LinkProperties;
-import io.branch.referral.util.ShareSheetStyle;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
@@ -44,6 +42,7 @@ public class ImageActionHelper {
     private Image img;
     private CompositeSubscription compositeSubscription;
     private EventBus eventBus;
+    private Subscription progressSubscription;
 
     public ImageActionHelper(Context context, EventBus eventBus) {
         this.context = context;
@@ -115,7 +114,8 @@ public class ImageActionHelper {
         eventBus.post(new ProgressDialogEvent(ProgressDialogEvent.SHOW_EVENT, 0));
 
         downloadId = DownloadUtil.enqueueDownload(context, img.getOriginalLink(), false);
-        compositeSubscription.add(DownloadUtil.getDownloadProgressFromId(context, downloadId).subscribe(new
+
+        progressSubscription = DownloadUtil.getDownloadProgressFromId(context, downloadId).subscribe(new
                                                                                                             Observer<Integer>() {
             @Override
             public void onCompleted() {
@@ -160,7 +160,9 @@ public class ImageActionHelper {
                 Timber.w("progress on next");
                 eventBus.post(new ProgressDialogEvent(ProgressDialogEvent.UPDATE_EVENT, progress));
             }
-        }));
+        });
+
+        compositeSubscription.add(progressSubscription);
     }
 
     public void onDownloadCompleted() {
@@ -208,6 +210,9 @@ public class ImageActionHelper {
     public void cancelDownload() {
         DownloadUtil.dequeueDownload(context, downloadId);
         FileUtil.deleteFile(FileUtil.getLocalPath(img.getOriginalLink()));
+        if (progressSubscription != null && !progressSubscription.isUnsubscribed()) {
+            progressSubscription.unsubscribe();
+        }
     }
 
     public void destruct() {

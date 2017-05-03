@@ -4,13 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import dpanic.freestock.pexels.wallpaper.injection.HasComponent;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
 
 /**
  * Created by dpanic on 12/29/2016.
@@ -54,7 +50,6 @@ public abstract class BaseFragment extends Fragment {
 
     @SuppressWarnings("unchecked")
     protected <C> C getComponent(Class<C> componentType) {
-        Timber.e("getComponent" + componentType.cast(((HasComponent<C>) getActivity()).getComponent()));
         return componentType.cast(((HasComponent<C>) getActivity()).getComponent());
     }
 

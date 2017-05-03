@@ -2,6 +2,8 @@ package dpanic.freestock.pexels.wallpaper.ui.main;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -18,6 +20,9 @@ import android.net.Uri;
 import android.text.format.DateUtils;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.dpanic.wallz.pexels.R;
 import timber.log.Timber;
 
 public class AppRate implements OnClickListener, OnCancelListener {
@@ -174,43 +179,45 @@ public class AppRate implements OnClickListener, OnCancelListener {
         String dismiss = "No thanks";
 
 
-        new AlertDialog.Builder(hostActivity)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(rate, new OnClickListener() {
+        new MaterialDialog.Builder(hostActivity)
+                .title(title)
+                .content(message)
+                .positiveText(rate)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         Editor editor = preferences.edit();
                         try {
-                            hostActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + hostActivity.getPackageName())));
+                            hostActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
+                                    "market://details?id=" + hostActivity.getPackageName())));
                         } catch (ActivityNotFoundException e) {
-                            Toast.makeText(hostActivity, "No Play Store installed on device", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(hostActivity, "No Play Store installed on device", Toast.LENGTH_SHORT)
+                                    .show();
                         }
                         editor.putBoolean(PrefsContract.PREF_DONT_SHOW_AGAIN, true);
                         editor.apply();
                         dialog.dismiss();
                     }
-                })
-                .setNeutralButton(remindLater, new OnClickListener() {
+                }).neutralText(remindLater).neutralColor(ContextCompat.getColor(hostActivity, R.color.color_primary_50))
+                .onNeutral(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         Editor editor = preferences.edit();
                         editor.putLong(PrefsContract.PREF_DATE_FIRST_LAUNCH, System.currentTimeMillis());
                         editor.putLong(PrefsContract.PREF_LAUNCH_COUNT, 0);
                         editor.apply();
                         dialog.dismiss();
                     }
-                })
-                .setNegativeButton(dismiss, new OnClickListener() {
+                }).negativeText(dismiss).negativeColor(ContextCompat.getColor(hostActivity, R.color.color_primary_50))
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         Editor editor = preferences.edit();
                         editor.putBoolean(PrefsContract.PREF_DONT_SHOW_AGAIN, true);
                         editor.apply();
                         dialog.dismiss();
                     }
-                })
-                .show();
+                }).show();
     }
 
     /**

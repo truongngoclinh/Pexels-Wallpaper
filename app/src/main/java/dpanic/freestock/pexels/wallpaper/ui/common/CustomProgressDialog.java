@@ -11,6 +11,7 @@ import com.dpanic.wallz.pexels.R;
 import com.pitt.library.fresh.FreshDownloadView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * Created by dpanic on 11/8/2016.
@@ -39,15 +40,8 @@ public class CustomProgressDialog {
         downloadView.upDateProgress(progress);
     }
 
-//    public void reset() {
-//        downloadView.reset();
-//    }
-//
-//    public void showProgressError() {
-//        downloadView.showDownloadError();
-//    }
-
     public void show() {
+        Timber.e("dialog show");
         mProgressDialog.show();
     }
 
@@ -63,11 +57,12 @@ public class CustomProgressDialog {
 //        downloadView.showDownloadOk();
 //    }
 
-//    public void showDownloadError(){
-//        downloadView.showDownloadError();
-//    }
+    public void showDownloadError(){
+        downloadView.showDownloadError();
+    }
 
     public void reset() {
+        Timber.e("dialog reset");
         downloadView.reset();
     }
 

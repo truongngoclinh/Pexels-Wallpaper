@@ -199,7 +199,8 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
 
     private void updateProgress(Message msg) {
         if (progressDialog != null && progressDialog.isShowing()) {
-            if (msg.what == Constants.PROGRESS_UPDATE) {
+            switch (msg.what) {
+            case Constants.PROGRESS_UPDATE:
                 if (currentProgress < loadedProgress) {
                     currentProgress++;
                     progressDialog.setProgress(currentProgress);
@@ -219,9 +220,14 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
                         }
                     }
                 }
-            } else {
+                break;
+            case Constants.PROGRESS_FINISH:
+                performingAction = false;
                 progressDialog.dismiss();
                 actionHelper.onDownloadCompleted();
+                break;
+            case Constants.PROGRESS_CANCEL:
+                break;
             }
         }
     }
@@ -344,8 +350,6 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
                 Timber.w("SHOW_EVENT");
                 if (progressDialog != null) {
                     progressDialog.setOnCancelListener(this);
-                    currentProgress = 0;
-                    loadedProgress = 0;
                     progressDialog.reset();
                     progressDialog.show();
                 }
@@ -356,10 +360,11 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
 //                progressDialog.setProgress(event.getProgress());
                 loadedProgress = event.getProgress();
                 break;
-//            case ProgressDialogEvent.DISMISS_EVENT:
-//                Timber.w("DISMISS_EVENT");
-//                progressDialog.dismiss();
-//                break;
+            case ProgressDialogEvent.DISMISS_EVENT:
+                Timber.w("DISMISS_EVENT");
+                performingAction = false;
+                progressDialog.dismiss();
+                break;
         }
     }
 
@@ -376,6 +381,8 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
             image.setLocalLink(FileUtil.getLocalPath(image.getOriginalLink()));
             mDataManager.addImage(image).subscribe();
         } else if (event.getStatus() == DownloadEvent.STATUS_ERROR) {
+            cancelUpdateProgress();
+
             Throwable throwable = event.getException();
             if (throwable != null) {
                 if (throwable instanceof SocketTimeoutException || throwable instanceof UnknownHostException) {
@@ -528,6 +535,7 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
             ctnAppLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    performingAction = false;
                     dialog.dismiss();
                     generateShortUrl();
                 }
@@ -743,12 +751,12 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
                     @Override
                     public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target,
                                                    boolean isFromMemoryCache, boolean isFirstResource) {
-                        Timber.d("onResourceReady: DetailActivity");
-                        Timber.d("onResourceReady: size = " + (resource.getByteCount()/1024));
-                        Timber.d("onResourceReady: isFromMemoryCache = " + isFromMemoryCache);
-                        Timber.d("onResourceReady: isFirstResource = " + isFirstResource);
-                        Timber.d("onResourceReady: resource w = " + resource.getWidth() + " - h = " +
-                                resource.getHeight());
+//                        Timber.d("onResourceReady: DetailActivity");
+//                        Timber.d("onResourceReady: size = " + (resource.getByteCount()/1024));
+//                        Timber.d("onResourceReady: isFromMemoryCache = " + isFromMemoryCache);
+//                        Timber.d("onResourceReady: isFirstResource = " + isFirstResource);
+//                        Timber.d("onResourceReady: resource w = " + resource.getWidth() + " - h = " +
+//                                resource.getHeight());
                         clpBackdropLoading.hide();
                         return false;
                     }
@@ -859,7 +867,17 @@ public class DetailActivity extends BaseActivity implements HasComponent<DetailC
 
     @Override
     public void onCancel(DialogInterface dialog) {
+        performingAction = false;
         actionHelper.cancelDownload();
+        cancelUpdateProgress();
+    }
+
+    private void cancelUpdateProgress() {
+        currentProgress = 0;
+        loadedProgress = 0;
+        progressDialog.showDownloadError();
+        progressDialog.reset();
+        progressHandler.removeMessages(Constants.PROGRESS_UPDATE);
     }
 
     @Override

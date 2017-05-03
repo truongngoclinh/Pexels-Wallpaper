@@ -54,4 +54,5 @@ public class Constants {
     public static final long PROGRESS_FINISH_DELAY = 900;
     public static final int PROGRESS_UPDATE = 0;
     public static final int PROGRESS_FINISH = 1;
+    public static final int PROGRESS_CANCEL = 2;
 }
