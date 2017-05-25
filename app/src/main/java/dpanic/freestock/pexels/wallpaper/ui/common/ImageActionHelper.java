@@ -256,7 +256,7 @@ public class ImageActionHelper {
                 .addContentMetadata("localLink", img.getLocalLink())
                 .addContentMetadata("orgLink", img.getOriginalLink());
 
-        String storeLink = "https://play.google.com/store/apps/details?id=" + context.getPackageName();
+//        String storeLink = "https://play.google.com/store/apps/details?id=" + context.getPackageName();
         final LinkProperties linkProperties = new LinkProperties()
                 .addTag("image_detail")
                 .setChannel("facebook")
